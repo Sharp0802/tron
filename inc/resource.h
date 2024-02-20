@@ -16,6 +16,10 @@ namespace tron
         const std::streamsize m_size;
 
     public:
+		Resource() = delete;
+		Resource(const Resource&) = delete;
+		Resource& operator =(const Resource&) = delete;
+
         explicit Resource(const std::string& name);
     };
 }
