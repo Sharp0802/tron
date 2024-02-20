@@ -13,11 +13,11 @@ namespace tron
         const GLuint m_handle;
 
     public:
-        explicit Shader(const std::string& name, GLenum type);
+        explicit Shader(const std::string& name);
 
         [[nodiscard]]
         GLuint GetHandle() const;
     };
-} // tron
+}
 
 #endif //SHADER_H

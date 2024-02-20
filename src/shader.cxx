@@ -5,18 +5,33 @@
 
 namespace
 {
+	GLenum GetShaderType(const std::string& name)
+	{
+		if (name.size() < 7 ||
+			!name.ends_with(".glsl") ||
+			name[name.size() - 7] != '.')
+			throw std::range_error("invalid shader name: '" + name + "'");
+
+		switch (name[name.size() - 6])
+		{
+		case 'v': return GL_VERTEX_SHADER;
+		case 'f': return GL_FRAGMENT_SHADER;
+		default: throw std::range_error("invalid shader type: '" + name + "'");
+		}
+	}
+
     std::string GetShaderPath(const std::string& name)
     {
-        return "sha/" + name + ".glsl";
+        return "sha/" + name;
     }
 }
 
 namespace tron
 {
-    Shader::Shader(const std::string& name, const GLenum type)
+    Shader::Shader(const std::string& name)
         : Resource(GetShaderPath(name)),
-          m_type(type),
-          m_handle(glCreateShader(type))
+          m_type(GetShaderType(m_name)),
+          m_handle(glCreateShader(m_type))
     {
         if (!m_handle)
             throw gl_error();
