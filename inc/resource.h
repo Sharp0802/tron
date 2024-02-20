@@ -1,0 +1,23 @@
+#ifndef RESOURCE_H
+#define RESOURCE_H
+
+#include <string>
+#include <utility>
+#include <fstream>
+#include <limits>
+
+namespace tron
+{
+    class Resource
+    {
+    protected:
+        const std::string     m_name;
+        std::ifstream         m_in;
+        const std::streamsize m_size;
+
+    public:
+        explicit Resource(const std::string& name);
+    };
+}
+
+#endif //RESOURCE_H
