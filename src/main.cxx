@@ -5,6 +5,7 @@
 #include <GLFW/glfw3.h>
 
 #include "shader.h"
+#include "program.h"
 
 #define TITLE "трон"
 
@@ -59,14 +60,20 @@ int main()
     glBindBuffer(GL_ARRAY_BUFFER, vbo);
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
 
-    const tron::Shader vs("sample.v", GL_VERTEX_SHADER);
-    const tron::Shader fs("sample.f", GL_FRAGMENT_SHADER);
+	/*
+    const tron::Shader vs("sample.v.glsl");
+    const tron::Shader fs("sample.f.glsl");
 
     GLuint programme = glCreateProgram();
     glAttachShader(programme, fs.GetHandle());
     glAttachShader(programme, vs.GetHandle());
     glLinkProgram(programme);
     glUseProgram(programme);
+    */
+
+	tron::Program program;
+	program.AttachResourceRoot("res");
+	program.Use();
 
     while (!glfwWindowShouldClose(window))
     {
@@ -78,7 +85,7 @@ int main()
         glfwSwapBuffers(window);
     }
 
-    glDeleteProgram(programme);
+    // glDeleteProgram(programme);
     glfwTerminate();
     return 0;
 }
