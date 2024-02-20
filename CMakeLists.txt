@@ -5,9 +5,9 @@ set(CMAKE_CXX_STANDARD 26)
 
 set(BINARY_DIR ${CMAKE_CURRENT_LIST_DIR}/bin)
 
-IF(WIN32)
+IF (WIN32)
     execute_process(
-            COMMAND           powershell -file ${CMAKE_CURRENT_LIST_DIR}/sh/fetch.ps1
+            COMMAND powershell -file ${CMAKE_CURRENT_LIST_DIR}/sh/fetch.ps1
             WORKING_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}
     )
 
@@ -22,19 +22,19 @@ IF(WIN32)
     file(MAKE_DIRECTORY ${BINARY_DIR})
 
     set(DEPENDENCIES
-        glew32.dll
-        glfw3.dll
+            glew32.dll
+            glfw3.dll
     )
-    FOREACH(DEPENDENCY ${DEPENDENCIES})
-        file(COPY           ${CMAKE_CURRENT_LIST_DIR}/.tmp/bin/x64/${DEPENDENCY}
-             DESTINATION    ${BINARY_DIR})
-    ENDFOREACH()
+    FOREACH (DEPENDENCY ${DEPENDENCIES})
+        file(COPY        ${CMAKE_CURRENT_LIST_DIR}/.tmp/bin/x64/${DEPENDENCY}
+             DESTINATION ${BINARY_DIR})
+    ENDFOREACH ()
     unset(DEPENDENCIES)
-ELSE()
+ELSE ()
     find_package(OpenGL REQUIRED)
-    find_package(GLEW   REQUIRED)
-    find_package(glfw3  REQUIRED)
-    find_package(glm    REQUIRED)
+    find_package(GLEW REQUIRED)
+    find_package(glfw3 REQUIRED)
+    find_package(glm REQUIRED)
 
     link_libraries(
             glfw
@@ -43,25 +43,18 @@ ELSE()
             OpenGL::OpenGL
             glm::glm
             GLEW::GLEW)
-ENDIF()
+ENDIF ()
 
 file(MAKE_DIRECTORY ${BINARY_DIR})
-file(COPY           ${CMAKE_CURRENT_LIST_DIR}/res
-     DESTINATION    ${BINARY_DIR})
+file(COPY        ${CMAKE_CURRENT_LIST_DIR}/res
+     DESTINATION ${BINARY_DIR})
 
-add_executable(tron
-    src/main.cxx
-    src/resource.cxx
-    inc/resource.h
-    src/shader.cc
-    inc/shader.h
-    inc/GL/except.h
-    inc/GL/stdexcept.h
-    src/memorymappedfile.cc
-    inc/memorymappedfile.h)
+file(GLOB_RECURSE SOURCES src/*.cxx)
+
+add_executable(tron ${SOURCES})
 target_include_directories(tron PRIVATE
-    ${CMAKE_CURRENT_LIST_DIR}/inc)
+        ${CMAKE_CURRENT_LIST_DIR}/inc)
 set_target_properties(tron PROPERTIES
-    LIBRARY_OUTPUT_DIRECTORY ${BINARY_DIR}
-    ARCHIVE_OUTPUT_DIRECTORY ${BINARY_DIR}
-    RUNTIME_OUTPUT_DIRECTORY ${BINARY_DIR})
+        LIBRARY_OUTPUT_DIRECTORY ${BINARY_DIR}
+        ARCHIVE_OUTPUT_DIRECTORY ${BINARY_DIR}
+        RUNTIME_OUTPUT_DIRECTORY ${BINARY_DIR})
