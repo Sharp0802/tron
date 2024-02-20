@@ -1,17 +1,24 @@
 #ifndef MEMORYMAPPEDFILE_H
 #define MEMORYMAPPEDFILE_H
+
+#if _WIN32
+#include <windows.h>
+#endif
 #include <string>
+
+#include "resource.h"
 
 namespace tron
 {
     class MemoryMappedFile
     {
 #ifdef _WIN32
+		HANDLE m_fd;
+		HANDLE m_mmf;
 #else
         int    m_fd;
-        void*  m_ptr;
-        size_t m_size;
 #endif
+		void*  m_ptr;
 
     public:
         MemoryMappedFile(const MemoryMappedFile&) = delete;
@@ -20,9 +27,6 @@ namespace tron
         explicit MemoryMappedFile(const std::string& path);
 
         ~MemoryMappedFile() noexcept(false);
-
-        [[nodiscard]]
-        size_t GetSize() const;
 
         [[nodiscard]]
         void* GetAddress() const;
