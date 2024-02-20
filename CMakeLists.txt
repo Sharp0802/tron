@@ -3,12 +3,47 @@ project(tron LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 26)
 
-find_package(glfw3  REQUIRED)
-find_package(GLEW   REQUIRED)
-find_package(OpenGL REQUIRED)
-find_package(glm    REQUIRED)
-
 set(BINARY_DIR ${CMAKE_CURRENT_LIST_DIR}/bin)
+
+IF(WIN32)
+    execute_process(
+            COMMAND           powershell -file ${CMAKE_CURRENT_LIST_DIR}/sh/fetch.ps1
+            WORKING_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}
+    )
+
+    link_directories(.tmp/lib/x64)
+    include_directories(.tmp/inc)
+
+    link_libraries(
+            opengl32
+            glew32.lib
+            glfw3.lib)
+
+    file(MAKE_DIRECTORY ${BINARY_DIR})
+
+    set(DEPENDENCIES
+        glew32.dll
+        glfw3.dll
+    )
+    FOREACH(DEPENDENCY ${DEPENDENCIES})
+        file(COPY           ${CMAKE_CURRENT_LIST_DIR}/.tmp/bin/x64/${DEPENDENCY}
+             DESTINATION    ${BINARY_DIR})
+    ENDFOREACH()
+    unset(DEPENDENCIES)
+ELSE()
+    find_package(OpenGL REQUIRED)
+    find_package(GLEW   REQUIRED)
+    find_package(glfw3  REQUIRED)
+    find_package(glm    REQUIRED)
+
+    link_libraries(
+            glfw
+            OpenGL::GL
+            OpenGL::GLU
+            OpenGL::OpenGL
+            glm::glm
+            GLEW::GLEW)
+ENDIF()
 
 file(MAKE_DIRECTORY ${BINARY_DIR})
 file(COPY           ${CMAKE_CURRENT_LIST_DIR}/res
@@ -30,10 +65,3 @@ set_target_properties(tron PROPERTIES
     LIBRARY_OUTPUT_DIRECTORY ${BINARY_DIR}
     ARCHIVE_OUTPUT_DIRECTORY ${BINARY_DIR}
     RUNTIME_OUTPUT_DIRECTORY ${BINARY_DIR})
-target_link_libraries(tron PRIVATE
-    glfw
-    OpenGL::GL
-    OpenGL::GLU
-    OpenGL::OpenGL
-    glm::glm
-    GLEW::GLEW)
