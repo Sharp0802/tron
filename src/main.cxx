@@ -12,6 +12,9 @@
 #define RED "\x1b[31m"
 #define CLR "\x1b[0m"
 
+int g_glWidth = 640;
+int g_glHeight = 480;
+
 int main()
 {
     if (!glfwInit())
@@ -20,7 +23,12 @@ int main()
         return 1;
     }
 
-    GLFWwindow* window = glfwCreateWindow(640, 480, TITLE, nullptr, nullptr);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 5);
+	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+
+    GLFWwindow* window = glfwCreateWindow(g_glWidth, g_glHeight, TITLE, nullptr, nullptr);
     if (!window)
     {
         std::cerr << RED "glfwCreateWindow(): Couldn't create window" CLR << std::endl;
@@ -28,6 +36,11 @@ int main()
         return 1;
     }
     glfwMakeContextCurrent(window);
+
+	glfwSetWindowSizeCallback(window, [](GLFWwindow* window, int width, int height) {
+		g_glWidth = width;
+		g_glHeight = height;
+	});
 
     glewExperimental = GL_TRUE;
     glewInit();
@@ -78,6 +91,8 @@ int main()
     while (!glfwWindowShouldClose(window))
     {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		glViewport(0, 0, g_glWidth, g_glHeight);
+
         glBindVertexArray(vao);
         glDrawArrays(GL_TRIANGLES, 0, 3);
         glfwPollEvents();
