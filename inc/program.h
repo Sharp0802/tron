@@ -26,9 +26,15 @@ namespace tron
 
 		void AttachResourceRoot(const std::string& root);
 
-		void LogProgramInfo() const;
+		void Validate() const;
 
-		static void LogProgramInfo(GLuint handle);
+		void PrintLog() const;
+
+		void PrintAll() const;
+
+		static void PrintLog(GLuint handle);
+
+		static void PrintAll(GLuint handle);
 	};
 }
 
