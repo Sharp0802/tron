@@ -129,6 +129,7 @@ int main()
 	Program program;
 	program.AttachResourceRoot("res");
 	program.Use();
+	program.Validate();
 
     while (!glfwWindowShouldClose(window))
     {
