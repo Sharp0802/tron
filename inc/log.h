@@ -36,7 +36,7 @@ namespace tron
 
 		std::ostream& trc()
 		{
-			return (std::cout << "\x1b[35m[INF] [" << value << "] ");
+			return (std::cout << "\x1b[35m[TRC] [" << value << "] ");
 		}
 	};
 
