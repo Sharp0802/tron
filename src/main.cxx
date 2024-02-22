@@ -98,18 +98,7 @@ int main()
     glBindBuffer(GL_ARRAY_BUFFER, vbo);
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
 
-	/*
-    const tron::Shader vs("sample.v.glsl");
-    const tron::Shader fs("sample.f.glsl");
-
-    GLuint programme = glCreateProgram();
-    glAttachShader(programme, fs.GetHandle());
-    glAttachShader(programme, vs.GetHandle());
-    glLinkProgram(programme);
-    glUseProgram(programme);
-    */
-
-	tron::Program program;
+	Program program;
 	program.AttachResourceRoot("res");
 	program.Use();
 
