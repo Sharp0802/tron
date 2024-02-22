@@ -3,6 +3,8 @@
 
 #include "program.h"
 #include "shader.h"
+#include "log.h"
+#include "GL/except.h"
 
 namespace fs = std::filesystem;
 
@@ -22,6 +24,20 @@ namespace tron
 	void Program::Use()
 	{
 		glLinkProgram(m_handle);
+
+		GLint params = -1;
+		glGetProgramiv(m_handle, GL_LINK_STATUS, &params);
+		if (params != GL_TRUE)
+		{
+			std::stringstream ss;
+			ss << "Couldn't link GL shader program [" << m_handle << ']';
+			std::string msg(ss.str());
+
+			log::gl.err() << msg << std::endl;
+			LogProgramInfo();
+			throw gl_error(msg);
+		}
+
 		glUseProgram(m_handle);
 		m_isUsing = true;
 	}
@@ -48,5 +64,21 @@ namespace tron
 
 			m_shaders.push_back(shader);
 		}
+	}
+
+	void Program::LogProgramInfo() const
+	{
+		LogProgramInfo(m_handle);
+	}
+
+	void Program::LogProgramInfo(GLuint handle)
+	{
+		__thread static char buf[BUFSIZ];
+		int cchMax    = BUFSIZ;
+		int cchActual = 0;
+
+		glGetProgramInfoLog(handle, cchMax, &cchActual, buf);
+		log::gl.trc() << "<SHADER PROGRAM INFORMATION [" << handle << "]>" << std::endl
+					  << buf << std::endl;
 	}
 }
