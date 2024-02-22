@@ -7,7 +7,8 @@ A simple game with OpenGL 4.5, written in C++26.
 ### Runtime
 
 - GPU
-  - OpenGL 4.5 compatible
+  - OpenGL 4.5 compatible \[recommanded\] -or-
+  - OpenGL 3.2 core profile compatible \[not tested, not recommanded\]
 - CPU
   - x86/x86-64 required
 
