@@ -72,12 +72,75 @@ namespace tron
 
 	void Shader::PrintLog(GLuint handle)
 	{
-		__thread static char buf[BUFSIZ];
+		static __thread char buf[BUFSIZ];
 		int cchMax    = BUFSIZ;
 		int cchActual = 0;
 
 		glGetShaderInfoLog(handle, cchMax, &cchActual, buf);
 		log::gl.trc() << "<SHADER INFORMATION [" << handle << "]>" << std::endl
 		              << buf << std::endl;
+	}
+
+#define ASSERT_SUCCEED_SET                                             \
+	if (auto err = glGetError(); err != GL_NO_ERROR)                   \
+    {                                                                  \
+        log::gl.err() << "Couldn't pass data to " << loc << std::endl; \
+        throw gl_error(err, "Couldn't pass data");                     \
+    }
+
+	template<>
+	void shader_detail::Set<int>(GLint loc, int value)
+	{
+		glUniform1i(loc, value);
+		ASSERT_SUCCEED_SET;
+	}
+
+	template<>
+	void shader_detail::Set<float>(GLint loc, float value)
+	{
+		glUniform1f(loc, value);
+		ASSERT_SUCCEED_SET;
+	}
+
+	template<>
+	void shader_detail::Set<glm::vec2>(GLint loc, glm::vec2 value)
+	{
+		glUniform2f(loc, value.x, value.y);
+		ASSERT_SUCCEED_SET;
+	}
+
+	template<>
+	void shader_detail::Set<glm::vec3>(GLint loc, glm::vec3 value)
+	{
+		glUniform3f(loc, value.x, value.y, value.z);
+		ASSERT_SUCCEED_SET;
+	}
+
+	template<>
+	void shader_detail::Set<glm::vec4>(GLint loc, glm::vec4 value)
+	{
+		glUniform4f(loc, value.x, value.y, value.z, value.w);
+		ASSERT_SUCCEED_SET;
+	}
+
+	template<>
+	void shader_detail::Set<glm::mat2>(GLint loc, glm::mat2 value)
+	{
+		glUniformMatrix2fv(loc, 4, GL_FALSE, reinterpret_cast<const GLfloat*>(&value));
+		ASSERT_SUCCEED_SET;
+	}
+
+	template<>
+	void shader_detail::Set<glm::mat3>(GLint loc, glm::mat3 value)
+	{
+		glUniformMatrix3fv(loc, 9, GL_FALSE, reinterpret_cast<const GLfloat*>(&value));
+		ASSERT_SUCCEED_SET;
+	}
+
+	template<>
+	void shader_detail::Set<glm::mat4>(GLint loc, glm::mat4 value)
+	{
+		glUniformMatrix4fv(loc, 16, GL_FALSE, reinterpret_cast<const GLfloat*>(&value));
+		ASSERT_SUCCEED_SET;
 	}
 }

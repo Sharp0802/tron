@@ -24,6 +24,7 @@ namespace tron
 	void Program::Use()
 	{
 		glLinkProgram(m_handle);
+		GLenum err = glGetError();
 
 		GLint params = -1;
 		glGetProgramiv(m_handle, GL_LINK_STATUS, &params);
@@ -35,35 +36,11 @@ namespace tron
 
 			log::gl.err() << msg << std::endl;
 			PrintLog();
-			throw gl_error(msg);
+			throw gl_error(err, msg);
 		}
 
 		glUseProgram(m_handle);
 		m_isUsing = true;
-	}
-
-	void Program::AttachResourceRoot(const std::string& root)
-	{
-		if (m_isUsing)
-			throw std::logic_error("program is already used by process");
-
-		/*******************************************
-		 * SHADERS                                 *
-		 *******************************************/
-		fs::path shaderRoot(root);
-		shaderRoot += "/sha";
-		for (const auto& entry : fs::recursive_directory_iterator(shaderRoot))
-		{
-			if (entry.is_directory())
-				continue;
-
-			const auto shaderId = fs::relative(entry.path(), shaderRoot).generic_string();
-			const auto shader = std::make_shared<Shader>(shaderId);
-
-			glAttachShader(m_handle, shader->GetHandle());
-
-			m_shaders.push_back(shader);
-		}
 	}
 
 	void Program::Validate() const
@@ -93,19 +70,20 @@ namespace tron
 
 	void Program::PrintLog(GLuint handle)
 	{
-		__thread static char buf[BUFSIZ];
+		static __thread char buf[BUFSIZ];
 		int cchMax    = BUFSIZ;
 		int cchActual = 0;
 
 		glGetProgramInfoLog(handle, cchMax, &cchActual, buf);
 		log::gl.trc() << "<SHADER PROGRAM LOG [" << handle << "]>" << std::endl
-					  << buf << std::endl;
+					  << buf << std::endl
+					  << "========================" << std::endl;
 	}
 
 	void Program::PrintAll(GLuint handle)
 	{
-		__thread static char name[64];
-		__thread static char extName[64];
+		static __thread char name[64];
+		static __thread char extName[64];
 		GLint cchMax = sizeof name;
 
 		std::stringstream ss;
@@ -149,8 +127,29 @@ namespace tron
 			}
 		}
 
-		log::gl.trc() << ss.str();
+		log::gl.trc() << ss.str() << "========================" << std::endl;
 
 		PrintLog(handle);
+	}
+
+	GLint Program::GetLocation(const std::string& name)
+	{
+		if (auto iter = m_loc.find(name); iter != m_loc.end())
+			return iter->second;
+
+		auto loc = glGetUniformLocation(m_handle, name.data());
+		if (loc != -1)
+			return loc;
+
+		log::gl.err() << "There is no uniform variable named as '" << name << "'" << std::endl;
+		throw gl_error("Couldn't retrieve location of uniform variable.");
+	}
+
+	Shader& Program::AttachShader(const std::string& name)
+	{
+		auto shared = std::make_shared<Shader>(name);
+		glAttachShader(m_handle, shared->GetHandle());
+		m_shaders.push_back(shared);
+		return *shared;
 	}
 }

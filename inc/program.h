@@ -15,7 +15,8 @@ namespace tron
 		GLuint m_handle;
 		bool   m_isUsing;
 
-		std::vector<std::shared_ptr<Shader>> m_shaders;
+		std::vector<std::shared_ptr<Shader>>   m_shaders;
+		std::unordered_map<std::string, GLint> m_loc;
 
 	public:
 		Program();
@@ -24,7 +25,9 @@ namespace tron
 
 		void Use();
 
-		void AttachResourceRoot(const std::string& root);
+		GLint GetLocation(const std::string& name);
+
+		Shader& AttachShader(const std::string& name);
 
 		void Validate() const;
 
