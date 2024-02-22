@@ -18,9 +18,9 @@ namespace tron
         [[nodiscard]]
         GLuint GetHandle() const;
 
-		void LogShaderInfo() const;
+		void PrintLog() const;
 
-		static void LogShaderInfo(GLuint handle);
+		static void PrintLog(GLuint handle);
     };
 }
 

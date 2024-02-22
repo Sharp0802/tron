@@ -55,7 +55,7 @@ namespace tron
 			std::string msg(ss.str());
 
 			log::gl.err() << msg << std::endl;
-			LogShaderInfo();
+			PrintLog();
 			throw gl_error(msg);
 		}
     }
@@ -65,12 +65,12 @@ namespace tron
         return m_handle;
     }
 
-	void Shader::LogShaderInfo() const
+	void Shader::PrintLog() const
 	{
-		LogShaderInfo(m_handle);
+		PrintLog(m_handle);
 	}
 
-	void Shader::LogShaderInfo(GLuint handle)
+	void Shader::PrintLog(GLuint handle)
 	{
 		__thread static char buf[BUFSIZ];
 		int cchMax    = BUFSIZ;
