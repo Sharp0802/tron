@@ -8,13 +8,23 @@
 
 struct gl_error final : public std::system_error
 {
-    gl_error()
-        : std::system_error(glGetError(), gl_category())
-    {
-    }
+	explicit gl_error(GLenum error)
+		: std::system_error(static_cast<int>(error), gl_category())
+	{
+	}
+
+	gl_error()
+		: gl_error(glGetError())
+	{
+	}
+
+	explicit gl_error(GLenum error, const std::string& what)
+		: std::system_error(static_cast<int>(error), gl_category(), what)
+	{
+	}
 
     explicit gl_error(const std::string& what)
-        : std::system_error(glGetError(), gl_category(), what)
+		: gl_error(glGetError(), what)
     {
     }
 };
