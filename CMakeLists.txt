@@ -11,6 +11,12 @@ IF (WIN32)
             WORKING_DIRECTORY ${CMAKE_CACHEFILE_DIR}
     )
 
+    execute_process(
+            COMMAND ${CMAKE_COMMAND} -E create_symlink
+            ${CMAKE_CURRENT_LIST_DIR}/dep/glm/glm
+            ${CMAKE_CACHEFILE_DIR}/.tmp/inc/glm
+    )
+
     link_directories(${CMAKE_CACHEFILE_DIR}/.tmp/lib/x64)
     include_directories(${CMAKE_CACHEFILE_DIR}/.tmp/inc)
 
