@@ -73,9 +73,11 @@ int main()
 	 * This let MacOS to use OpenGL 4.
 	 */
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 5);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
 	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+
+	glfwWindowHint(GLFW_SAMPLES, 4);
 
     GLFWwindow* window = glfwCreateWindow(g_glWidth, g_glHeight, TITLE, nullptr, nullptr);
     if (!window)
@@ -140,9 +142,11 @@ int main()
         glfwPollEvents();
 
         glfwSwapBuffers(window);
-    }
 
-    // glDeleteProgram(programme);
+		if (GLFW_PRESS == glfwGetKey(window, GLFW_KEY_ESCAPE))
+			glfwSetWindowShouldClose(window, 1);
+	}
+
     glfwTerminate();
     return 0;
 }
