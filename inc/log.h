@@ -33,6 +33,11 @@ namespace tron
 		{
 			return (std::cout << "\x1b[32m[INF] [" << value << "] ");
 		}
+
+		std::ostream& trc()
+		{
+			return (std::cout << "\x1b[35m[INF] [" << value << "] ");
+		}
 	};
 
 	namespace log

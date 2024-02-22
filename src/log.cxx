@@ -58,6 +58,6 @@ namespace tron
 
 		ss << "================================" << std::endl;
 
-		gl.out() << ss.str();
+		gl.trc() << ss.str();
 	}
 }
