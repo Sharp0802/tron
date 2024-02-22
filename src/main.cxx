@@ -15,8 +15,24 @@
 int g_glWidth = 640;
 int g_glHeight = 480;
 
+#if _WIN32
+#include <windows.h>
+#endif
+
 int main()
 {
+#if _WIN32
+	HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
+	if (hOut == INVALID_HANDLE_VALUE)
+		return GetLastError();
+	DWORD dwMode = 0;
+	if (!GetConsoleMode(hOut, &dwMode))
+		return GetLastError();
+	dwMode |= ENABLE_VIRTUAL_TERMINAL_PROCESSING;
+	if (!SetConsoleMode(hOut, dwMode))
+		return GetLastError();
+#endif
+
     if (!glfwInit())
     {
         std::cerr << RED "glfwInit(): Couldn't start glfw3" CLR << std::endl;
