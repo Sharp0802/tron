@@ -8,11 +8,11 @@ set(BINARY_DIR ${CMAKE_CURRENT_LIST_DIR}/bin)
 IF (WIN32)
     execute_process(
             COMMAND powershell -file ${CMAKE_CURRENT_LIST_DIR}/sh/fetch.ps1
-            WORKING_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}
+            WORKING_DIRECTORY ${CMAKE_CACHEFILE_DIR}
     )
 
-    link_directories(.tmp/lib/x64)
-    include_directories(.tmp/inc)
+    link_directories(${CMAKE_CACHEFILE_DIR}/.tmp/lib/x64)
+    include_directories(${CMAKE_CACHEFILE_DIR}/.tmp/inc)
 
     link_libraries(
             opengl32
@@ -26,7 +26,7 @@ IF (WIN32)
             glfw3.dll
     )
     FOREACH (DEPENDENCY ${DEPENDENCIES})
-        file(COPY        ${CMAKE_CURRENT_LIST_DIR}/.tmp/bin/x64/${DEPENDENCY}
+        file(COPY        ${CMAKE_CACHEFILE_DIR}/.tmp/bin/x64/${DEPENDENCY}
              DESTINATION ${BINARY_DIR})
     ENDFOREACH ()
     unset(DEPENDENCIES)
