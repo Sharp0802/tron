@@ -1,7 +1,9 @@
+#include <sstream>
 #include "shader.h"
 
 #include "memorymappedfile.h"
 #include "GL/except.h"
+#include "log.h"
 
 namespace
 {
@@ -43,10 +45,39 @@ namespace tron
 
         glShaderSource(m_handle, 1, reinterpret_cast<const GLchar* const*>(&addr), nullptr);
         glCompileShader(m_handle);
+
+		GLint params = -1;
+		glGetShaderiv(m_handle, GL_COMPILE_STATUS, &params);
+		if (GL_TRUE != params)
+		{
+			std::stringstream ss;
+			ss << "Couldn't compile GL shader [" << m_handle << "]";
+			std::string msg(ss.str());
+
+			log::gl.err() << msg << std::endl;
+			LogShaderInfo();
+			throw gl_error(msg);
+		}
     }
 
     GLuint Shader::GetHandle() const
     {
         return m_handle;
     }
+
+	void Shader::LogShaderInfo() const
+	{
+		LogShaderInfo(m_handle);
+	}
+
+	void Shader::LogShaderInfo(GLuint handle)
+	{
+		__thread static char buf[BUFSIZ];
+		int cchMax    = BUFSIZ;
+		int cchActual = 0;
+
+		glGetShaderInfoLog(handle, cchMax, &cchActual, buf);
+		log::gl.trc() << "<SHADER INFORMATION [" << handle << "]>" << std::endl
+		              << buf << std::endl;
+	}
 }
