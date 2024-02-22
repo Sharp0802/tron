@@ -127,9 +127,15 @@ int main()
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
 
 	Program program;
-	program.AttachResourceRoot("res");
+
+	auto& frag = program.AttachShader("sample.f.glsl");
+	program.AttachShader("sample.v.glsl");
+
 	program.Use();
 	program.Validate();
+
+	frag.Set(program.GetLocation("inputColour"), glm::vec4(0, 1, 0, 1));
+
 
     while (!glfwWindowShouldClose(window))
     {
