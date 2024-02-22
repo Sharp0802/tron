@@ -22,6 +22,28 @@ int g_glHeight = 480;
 
 using namespace tron;
 
+void UpdateFPSCounter(GLFWwindow* window)
+{
+	static double prev = glfwGetTime();
+	static int    cFPS;
+	static char   buf[BUFSIZ];
+
+	double current = glfwGetTime();
+	double elapsed = current - prev;
+
+	if (elapsed > 0.25)
+	{
+		prev = current;
+		double fps = (double)cFPS / elapsed;
+
+		sprintf(buf, TITLE " @ fps: %.2lf", fps);
+		glfwSetWindowTitle(window, buf);
+		cFPS = 0;
+	}
+
+	cFPS++;
+}
+
 int main()
 {
 #if _WIN32
@@ -108,6 +130,8 @@ int main()
 
     while (!glfwWindowShouldClose(window))
     {
+		UpdateFPSCounter(window);
+
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glViewport(0, 0, g_glWidth, g_glHeight);
 
