@@ -4,6 +4,7 @@
 #define GLFW_DLL
 #include <GLFW/glfw3.h>
 
+#include "log.h"
 #include "shader.h"
 #include "program.h"
 
@@ -19,6 +20,8 @@ int g_glHeight = 480;
 #include <windows.h>
 #endif
 
+using namespace tron;
+
 int main()
 {
 #if _WIN32
@@ -33,9 +36,13 @@ int main()
 		return GetLastError();
 #endif
 
+	glfwSetErrorCallback([](int err, const char* desc) {
+		log::fw.err() << std::hex << err << std::dec << ": " << desc << std::endl;
+	});
+
     if (!glfwInit())
     {
-        std::cerr << RED "glfwInit(): Couldn't start glfw3" CLR << std::endl;
+        log::fw.err() << "glfwInit(): Couldn't start glfw3" << std::endl;
         return 1;
     }
 
@@ -47,11 +54,13 @@ int main()
     GLFWwindow* window = glfwCreateWindow(g_glWidth, g_glHeight, TITLE, nullptr, nullptr);
     if (!window)
     {
-        std::cerr << RED "glfwCreateWindow(): Couldn't create window" CLR << std::endl;
+        log::fw.err() << "glfwCreateWindow(): Couldn't create window" << std::endl;
         glfwTerminate();
         return 1;
     }
     glfwMakeContextCurrent(window);
+
+	log::LogGLParameters();
 
 	glfwSetWindowSizeCallback(window, [](GLFWwindow* window, int width, int height) {
 		g_glWidth = width;
@@ -64,8 +73,8 @@ int main()
     const GLubyte* renderer = glGetString(GL_RENDERER);
     const GLubyte* version  = glGetString(GL_VERSION);
 
-    std::cout << "Renderer: " << renderer << std::endl
-              << "Version : " << version  << std::endl;
+	log::gl.out() << "Renderer: " << renderer << std::endl;
+	log::gl.out() << "Version : " << version << std::endl;
 
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_LESS);
