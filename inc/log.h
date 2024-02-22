@@ -46,6 +46,8 @@ namespace tron
 		static Log<decltype("GLFW"_t)> fw;
 
 		void LogGLParameters();
+
+		std::string GLTypeToString(GLenum type);
 	}
 }
 
