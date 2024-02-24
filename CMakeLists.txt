@@ -51,10 +51,6 @@ ELSE ()
             GLEW::GLEW)
 ENDIF ()
 
-file(MAKE_DIRECTORY ${BINARY_DIR})
-file(COPY        ${CMAKE_CURRENT_LIST_DIR}/res
-     DESTINATION ${BINARY_DIR})
-
 file(GLOB_RECURSE SOURCES src/*.cxx)
 
 add_executable(tron ${SOURCES})
@@ -64,3 +60,11 @@ set_target_properties(tron PROPERTIES
         LIBRARY_OUTPUT_DIRECTORY ${BINARY_DIR}
         ARCHIVE_OUTPUT_DIRECTORY ${BINARY_DIR}
         RUNTIME_OUTPUT_DIRECTORY ${BINARY_DIR})
+
+add_custom_command(
+        TARGET tron
+        PRE_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_directory
+            ${CMAKE_CURRENT_LIST_DIR}/res
+            ${BINARY_DIR}/res
+)
