@@ -21,7 +21,7 @@ namespace tron
 		glDeleteProgram(m_handle);
 	}
 
-	void Program::Use()
+	void Program::Link()
 	{
 		glLinkProgram(m_handle);
 		GLenum err = glGetError();
@@ -38,7 +38,10 @@ namespace tron
 			PrintLog();
 			throw gl_error(err, msg);
 		}
+	}
 
+	void Program::Use()
+	{
 		glUseProgram(m_handle);
 		m_isUsing = true;
 	}
@@ -46,16 +49,16 @@ namespace tron
 	void Program::Validate() const
 	{
 		glValidateProgram(m_handle);
-		GLenum err = glGetError();
 
 		GLint params = -1;
 		glGetProgramiv(m_handle, GL_VALIDATE_STATUS, &params);
-		log::gl.out() << "program [" << m_handle << "] GL_VALIDATE_STATUS = " << params << std::endl;
+		(GL_TRUE == params ? log::gl.out() : log::gl.err())
+			<< "program [" << m_handle << "] GL_VALIDATE_STATUS = " << params << std::endl;
 		if (GL_TRUE == params)
 			return;
 
 		PrintLog();
-		throw gl_error(err, "Shader program validation failed.");
+		throw gl_error(GL_NO_ERROR, "Shader program validation failed.");
 	}
 
 	void Program::PrintLog() const
@@ -151,5 +154,15 @@ namespace tron
 		glAttachShader(m_handle, shared->GetHandle());
 		m_shaders.push_back(shared);
 		return *shared;
+	}
+
+	void Program::BindAttribute(GLuint location, const std::string& name)
+	{
+		glBindAttribLocation(m_handle, location, name.data());
+		if (GLenum err = glGetError(); err != GL_NO_ERROR)
+		{
+			log::gl.err() << "Couldn't bind attribute location (" << name << " >>> " << location << ")" << std::endl;
+			throw gl_error(err, "Couldn't bind attribute location");
+		}
 	}
 }

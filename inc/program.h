@@ -23,11 +23,15 @@ namespace tron
 
 		~Program();
 
+		void Link();
+
 		void Use();
 
 		GLint GetLocation(const std::string& name);
 
 		Shader& AttachShader(const std::string& name);
+
+		void BindAttribute(GLuint location, const std::string& name);
 
 		void Validate() const;
 
