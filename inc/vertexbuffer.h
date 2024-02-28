@@ -29,12 +29,14 @@ namespace tron
 
 		bool m_disposed;
 
+		GLuint SwapBinding();
+
 	public:
 		explicit VertexBuffer(VertexBufferTarget target, VertexBufferUsage usage = VertexBufferUsage::STATIC_DRAW);
 
 		~VertexBuffer();
 
-		GLuint Bind();
+		void Bind();
 
 		__attribute__((access(read_only, 2, 3)))
 		void Buffer(void* buffer, size_t size);

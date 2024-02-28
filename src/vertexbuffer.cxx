@@ -37,16 +37,23 @@ namespace tron
 
 #define ASSERT_ALIVE ASSERT(!m_disposed)
 
-	GLuint VertexBuffer::Bind()
+	GLuint VertexBuffer::SwapBinding()
 	{
 		ASSERT_ALIVE;
 
 		GLuint old;
 		glGetIntegerv(m_binding, reinterpret_cast<GLint*>(&old));
 
-		glBindBuffer(static_cast<GLenum>(m_target), m_handle);
+		Bind();
 
 		return old;
+	}
+
+	void VertexBuffer::Bind()
+	{
+		ASSERT_ALIVE;
+
+		glBindBuffer(static_cast<GLenum>(m_target), m_handle);
 	}
 
 	void VertexBuffer::Buffer(void* buffer, size_t size)
@@ -54,10 +61,10 @@ namespace tron
 		ASSERT_ALIVE;
 
 		/*
-		 * DO NOT BELIEVE DEVELOPERS TO CALL Buffer() AFTER CALLING Bind().
+		 * DO NOT BELIEVE DEVELOPERS TO CALL Buffer() AFTER CALLING SwapBinding().
 		 * glBufferData is not context-free. Context must be load/restore-ed.
 		 */
-		auto old = Bind();
+		auto old = SwapBinding();
 
 		glBufferData(
 				static_cast<GLenum>(m_target),
@@ -86,10 +93,10 @@ namespace tron
 		ASSERT_ALIVE;
 
 		/*
-		 * DO NOT BELIEVE DEVELOPERS TO CALL Buffer() AFTER CALLING Bind().
+		 * DO NOT BELIEVE DEVELOPERS TO CALL Buffer() AFTER CALLING SwapBinding().
 		 * glBufferData is not context-free. Context must be load/restore-ed.
 		 */
-		auto old = Bind();
+		auto old = SwapBinding();
 
 		glBufferSubData(
 				static_cast<GLenum>(m_target),
