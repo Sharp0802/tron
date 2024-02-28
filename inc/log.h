@@ -2,6 +2,7 @@
 #define TRON_LOG_H
 
 #include <iostream>
+#include <GL/glew.h>
 
 namespace tron
 {
