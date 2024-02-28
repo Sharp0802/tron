@@ -3,12 +3,9 @@
 #include <GL/glew.h>
 #define GLFW_DLL
 #include <GLFW/glfw3.h>
-#include <glm/glm.hpp>
 
 #include "log.h"
-#include "shader.h"
 #include "program.h"
-#include "def.h"
 #include "vertexbuffer.h"
 #include "vertexarray.h"
 
@@ -17,9 +14,6 @@
 #endif
 
 #define TITLE "трон"
-
-#define RED "\x1b[31m"
-#define CLR "\x1b[0m"
 
 int g_glWidth = 640;
 int g_glHeight = 480;
