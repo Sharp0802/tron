@@ -10,31 +10,14 @@
 
 namespace tron
 {
-	struct VertexAttributeInfo
-	{
-		GLenum Type;
-		GLint  Size;
-		GLint  Count;
-	};
-
 	template<typename T>
-	struct VertexAttribute
-	{
-		constexpr static GLint  Size  = sizeof(T);
-		constexpr static GLenum Type  = -1;
-		constexpr static GLint  Count = -1;
-
-		constexpr static VertexAttributeInfo Create()
-		{
-			static_assert(Type != -1 && Count != -1, "Type `T` is not primitive");
-			return { Type, Size, Count };
-		}
-	};
+	struct VertexAttribute;
 
 	template<>
 	struct VertexAttribute<int>
 	{
 		constexpr static GLenum Type  = GL_INT;
+		constexpr static GLint  Size  = sizeof(int);
 		constexpr static GLint  Count = 1;
 	};
 
@@ -42,6 +25,7 @@ namespace tron
 	struct VertexAttribute<float>
 	{
 		constexpr static GLenum Type  = GL_FLOAT;
+		constexpr static GLint  Size  = sizeof(float);
 		constexpr static GLint  Count = 1;
 	};
 
@@ -51,6 +35,7 @@ namespace tron
 		struct VertexAttribute<glm::vec##n>                      \
 		{                                                        \
 			constexpr static GLenum Type  = GL_FLOAT;            \
+			constexpr static GLint  Size  = sizeof(glm::vec##n); \
 			constexpr static GLint  Count = n;                   \
 		}
 #endif
@@ -61,6 +46,7 @@ namespace tron
 		struct VertexAttribute<glm::mat##n>                      \
 		{                                                        \
 			constexpr static GLenum Type  = GL_FLOAT;            \
+			constexpr static GLint  Size  = sizeof(glm::mat##n); \
 			constexpr static GLint  Count = n*n;                 \
 		}
 #endif
@@ -73,6 +59,20 @@ namespace tron
 	VERTEX_ATTRIBUTE_INFO_FROM_MAT_N(2);
 	VERTEX_ATTRIBUTE_INFO_FROM_MAT_N(3);
 	VERTEX_ATTRIBUTE_INFO_FROM_MAT_N(4);
+
+	struct VertexAttributeInfo
+	{
+		GLenum Type;
+		GLint  Size;
+		GLint  Count;
+
+		template<typename T>
+		constexpr static VertexAttributeInfo Create()
+		{
+			using A = VertexAttribute<T>;
+			return { A::Type, A::Size, A::Count };
+		}
+	};
 
 	class VertexArray
 	{
