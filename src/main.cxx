@@ -135,6 +135,7 @@ int main()
 	auto& frag = program.AttachShader("sample.f.glsl");
 	program.AttachShader("sample.v.glsl");
 
+	program.Link();
 	program.Use();
 	program.Validate();
 
@@ -150,6 +151,7 @@ int main()
 		glViewport(0, 0, g_glWidth, g_glHeight);
 
         glBindVertexArray(vao);
+		program.Use();
         glDrawArrays(GL_TRIANGLES, 0, 3);
         glfwPollEvents();
 
