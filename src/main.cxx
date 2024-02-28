@@ -49,13 +49,13 @@ int main()
 #if _WIN32
 	HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
 	if (hOut == INVALID_HANDLE_VALUE)
-		return GetLastError();
+		throw std::system_error(static_cast<int>(GetLastError()), std::system_category());
 	DWORD dwMode = 0;
 	if (!GetConsoleMode(hOut, &dwMode))
-		return GetLastError();
+		throw std::system_error(static_cast<int>(GetLastError()), std::system_category());
 	dwMode |= ENABLE_VIRTUAL_TERMINAL_PROCESSING;
 	if (!SetConsoleMode(hOut, dwMode))
-		return GetLastError();
+		throw std::system_error(static_cast<int>(GetLastError()), std::system_category());
 #endif
 
 	glfwSetErrorCallback([](int err, const char* desc) {
