@@ -65,7 +65,12 @@ namespace tron
 				buffer,
 				static_cast<GLenum>(m_usage));
 
-		/* Restore context */
+		/*
+		 * Restore context
+		 *
+		 * If this is the first VBO, error will be generated on glBindBuffer().
+		 * Just ignore it.
+		 */
 		if (old != m_handle)
 			glBindBuffer(static_cast<GLenum>(m_target), old);
 	}
@@ -92,7 +97,12 @@ namespace tron
 				static_cast<ssize_t>(size),
 				buffer);
 
-		/* Restore context */
+		/*
+		 * Restore context
+		 *
+		 * If this is the first VBO, error will be generated on glBindBuffer().
+		 * Just ignore it.
+		 */
 		if (old != m_handle)
 			glBindBuffer(static_cast<GLenum>(m_target), old);
 	}
