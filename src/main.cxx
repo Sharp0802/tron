@@ -73,7 +73,7 @@ int main()
     }
 
 	/*
-	 * To support MacOS, We should use OpenGL 3.5 core profile.
+	 * To support MacOS, We should use OpenGL 3.2 core profile.
 	 * This let MacOS to use OpenGL 4.
 	 */
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
@@ -118,47 +118,44 @@ int main()
         -0.5f, -0.5f,  0.0f, 0.0f, 0.0f, 1.0f
     };
 
-    GLuint vbo = 0;
-    glGenBuffers(1, &vbo);
-    glBindBuffer(GL_ARRAY_BUFFER, vbo);
-    glBufferData(GL_ARRAY_BUFFER, sizeof points, points, GL_STATIC_DRAW);
+	VertexBuffer vbo(VertexBufferTarget::ARRAY_BUFFER);
+	vbo.Buffer(points, sizeof points);
+	vbo.Bind();
 
-    GLuint vao = 0;
-    glGenVertexArrays(1, &vao);
-    glBindVertexArray(vao);
-    glEnableVertexAttribArray(0);
-    glBindBuffer(GL_ARRAY_BUFFER, vbo);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
+	VertexArray vao = {
+		VertexAttributeInfo::Create<glm::vec3>(),
+		VertexAttributeInfo::Create<glm::vec3>(),
+	};
+	vao.Bind();
 
 	Program program;
 
 	auto& frag = program.AttachShader("sample.f.glsl");
-	program.AttachShader("sample.v.glsl");
+	auto& vert = program.AttachShader("sample.v.glsl");
 
 	program.Link();
 	program.Use();
 	program.Validate();
 
-	frag.Set(program.GetLocation("inputColour"), glm::vec4(0, 1, 0, 1));
-
 
     while (!glfwWindowShouldClose(window))
     {
+		if (glfwGetKey(window, GLFW_KEY_ESCAPE))
+			glfwSetWindowShouldClose(window, 1);
+
 		UpdateFPSCounter(window);
+		glViewport(0, 0, g_glWidth, g_glHeight);
 
 		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		glViewport(0, 0, g_glWidth, g_glHeight);
 
-        glBindVertexArray(vao);
 		program.Use();
+
+		vao.Bind();
         glDrawArrays(GL_TRIANGLES, 0, 3);
-        glfwPollEvents();
 
         glfwSwapBuffers(window);
-
-		if (GLFW_PRESS == glfwGetKey(window, GLFW_KEY_ESCAPE))
-			glfwSetWindowShouldClose(window, 1);
+		glfwPollEvents();
 	}
 
     glfwTerminate();
