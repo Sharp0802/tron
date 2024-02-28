@@ -27,8 +27,12 @@ namespace tron
 		const GLenum m_binding;
 		const GLuint m_handle;
 
+		bool m_disposed;
+
 	public:
 		explicit VertexBuffer(VertexBufferTarget target, VertexBufferUsage usage = VertexBufferUsage::STATIC_DRAW);
+
+		~VertexBuffer();
 
 		GLuint Bind();
 

@@ -1,4 +1,5 @@
 #include "vertexbuffer.h"
+#include "def.h"
 
 namespace
 {
@@ -29,12 +30,17 @@ namespace tron
 			: m_target(target),
 			  m_usage(usage),
 			  m_binding(GetBindingEnum(target)),
-			  m_handle(CreateBuffer())
+			  m_handle(CreateBuffer()),
+			  m_disposed(false)
 	{
 	}
 
+#define ASSERT_ALIVE ASSERT(!m_disposed)
+
 	GLuint VertexBuffer::Bind()
 	{
+		ASSERT_ALIVE;
+
 		GLuint old;
 		glGetIntegerv(m_binding, reinterpret_cast<GLint*>(&old));
 
@@ -45,6 +51,8 @@ namespace tron
 
 	void VertexBuffer::Buffer(void* buffer, size_t size)
 	{
+		ASSERT_ALIVE;
+
 		/*
 		 * DO NOT BELIEVE DEVELOPERS TO CALL Buffer() AFTER CALLING Bind().
 		 * glBufferData is not context-free. Context must be load/restore-ed.
@@ -62,8 +70,16 @@ namespace tron
 			glBindBuffer(static_cast<GLenum>(m_target), old);
 	}
 
+	VertexBuffer::~VertexBuffer()
+	{
+		glDeleteBuffers(1, &m_handle);
+		m_disposed = true;
+	}
+
 	void VertexBuffer::BufferSubData(void* buffer, size_t offset, size_t size)
 	{
+		ASSERT_ALIVE;
+
 		/*
 		 * DO NOT BELIEVE DEVELOPERS TO CALL Buffer() AFTER CALLING Bind().
 		 * glBufferData is not context-free. Context must be load/restore-ed.
@@ -83,11 +99,13 @@ namespace tron
 
 	VertexBufferTarget VertexBuffer::Target() const
 	{
+		ASSERT_ALIVE;
 		return m_target;
 	}
 
 	VertexBufferUsage VertexBuffer::Usage() const
 	{
+		ASSERT_ALIVE;
 		return m_usage;
 	}
 }
