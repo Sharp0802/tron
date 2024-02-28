@@ -36,7 +36,7 @@ namespace tron
 
 		GLuint Bind();
 
-		__attribute__((access(read_only, 1, 2)))
+		__attribute__((access(read_only, 2, 3)))
 		void Buffer(void* buffer, size_t size);
 
 		void BufferSubData(void* buffer, size_t offset, size_t size);
