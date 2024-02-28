@@ -3,10 +3,18 @@
 #include <GL/glew.h>
 #define GLFW_DLL
 #include <GLFW/glfw3.h>
+#include <glm/glm.hpp>
 
 #include "log.h"
 #include "shader.h"
 #include "program.h"
+#include "def.h"
+#include "vertexbuffer.h"
+#include "vertexarray.h"
+
+#if _WIN32
+#include <windows.h>
+#endif
 
 #define TITLE "трон"
 
@@ -15,10 +23,6 @@
 
 int g_glWidth = 640;
 int g_glHeight = 480;
-
-#if _WIN32
-#include <windows.h>
-#endif
 
 using namespace tron;
 
@@ -109,9 +113,9 @@ int main()
 
 
     float points[] = {
-         0.0f,  0.5f,  0.0f,
-         0.5f, -0.5f,  0.0f,
-        -0.5f, -0.5f,  0.0f
+         0.0f,  0.5f,  0.0f, 1.0f, 0.0f, 0.0f,
+         0.5f, -0.5f,  0.0f, 0.0f, 1.0f, 0.0f,
+        -0.5f, -0.5f,  0.0f, 0.0f, 0.0f, 1.0f
     };
 
     GLuint vbo = 0;
@@ -141,6 +145,7 @@ int main()
     {
 		UpdateFPSCounter(window);
 
+		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glViewport(0, 0, g_glWidth, g_glHeight);
 
