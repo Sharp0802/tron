@@ -78,11 +78,11 @@ namespace tron
     {
         m_fd = open(path.c_str(), O_RDWR);
         if (m_fd == -1)
-            throw std::system_error(errno, std::system_category(), "Couldn't open fd.");
+            throw std::system_error(errno, std::generic_category(), "Couldn't open fd.");
 
         struct stat st{};
         if (fstat(m_fd, &st) < 0)
-            throw std::system_error(errno, std::system_category(), "Couldn't stat fd.");
+            throw std::system_error(errno, std::generic_category(), "Couldn't stat fd.");
         m_size = st.st_size;
 
         m_ptr = mmap(
@@ -94,15 +94,15 @@ namespace tron
             0);
 
         if (m_ptr == MAP_FAILED)
-            throw std::system_error(errno, std::system_category(), "Couldn't mmap fd.");
+            throw std::system_error(errno, std::generic_category(), "Couldn't mmap fd.");
     }
 
     MemoryMappedFile::~MemoryMappedFile() noexcept(false)
     {
         if (munmap(m_ptr, m_size))
-            throw std::system_error(errno, std::system_category(), "Couldn't unmap fd.");
+            throw std::system_error(errno, std::generic_category(), "Couldn't unmap fd.");
 		if (close(m_fd))
-			throw std::system_error(errno, std::system_category(), "Couldn't close fd");
+			throw std::system_error(errno, std::generic_category(), "Couldn't close fd");
     }
 #endif
 
