@@ -34,7 +34,7 @@ namespace tron
 		for (const auto& attribute: m_attributes)
 			stride += attribute.Size;
 
-		for (size_t i = 0; i < m_attributes.size(); ++i)
+		for (size_t i = 0, offset = 0; i < m_attributes.size(); ++i)
 		{
 			auto attribute = m_attributes[i];
 			glVertexAttribPointer(
@@ -42,9 +42,11 @@ namespace tron
 					attribute.Count,
 					attribute.Type,
 					GL_FALSE,
-					attribute.Size,
-					reinterpret_cast<const void*>(stride));
+					static_cast<GLsizei>(stride),
+					reinterpret_cast<const void*>(offset));
 			glEnableVertexAttribArray(i);
+
+			offset += attribute.Size;
 		}
 
 		/*
