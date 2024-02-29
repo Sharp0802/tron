@@ -61,7 +61,7 @@ namespace tron
 		GLenum m_type;
 
 	public:
-		IndexBuffer(VertexBufferUsage usage);
+		explicit IndexBuffer(VertexBufferUsage usage);
 
 		using VertexBuffer::Bind;
 		using VertexBuffer::Target;
