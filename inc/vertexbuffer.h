@@ -60,6 +60,7 @@ namespace tron
 	class IndexBuffer : protected VertexBuffer
 	{
 		GLenum m_type;
+		size_t m_size;
 
 	public:
 		explicit IndexBuffer(VertexBufferUsage usage);
@@ -77,6 +78,9 @@ namespace tron
 
 		[[nodiscard]]
 		GLenum Type() const;
+
+		[[nodiscard]]
+		size_t Size() const;
 	};
 }
 
