@@ -86,6 +86,10 @@ namespace tron
 		GLuint SwapBinding();
 
 	public:
+		VertexArray& operator=(const VertexArray&) = delete;
+		VertexArray(const VertexArray&) = delete;
+		VertexArray() = delete;
+
 		VertexArray(std::initializer_list<VertexAttributeInfo> attributes);
 
 		~VertexArray();

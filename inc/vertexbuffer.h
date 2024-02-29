@@ -32,6 +32,10 @@ namespace tron
 		GLuint SwapBinding();
 
 	public:
+		VertexBuffer& operator=(const VertexBuffer&) = delete;
+		VertexBuffer(const VertexBuffer&) = delete;
+		VertexBuffer() = delete;
+
 		explicit VertexBuffer(VertexBufferTarget target, VertexBufferUsage usage = VertexBufferUsage::STATIC_DRAW);
 
 		~VertexBuffer();
