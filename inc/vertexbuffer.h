@@ -29,9 +29,10 @@ namespace tron
 		const GLenum m_binding;
 		const GLuint m_handle;
 
-		bool m_disposed;
-
 		GLuint SwapBinding();
+
+	protected:
+		bool m_disposed;
 
 	public:
 		VertexBuffer& operator=(const VertexBuffer&) = delete;
@@ -40,7 +41,7 @@ namespace tron
 
 		explicit VertexBuffer(VertexBufferTarget target, VertexBufferUsage usage = VertexBufferUsage::DEFAULT_DRAW);
 
-		~VertexBuffer();
+		virtual ~VertexBuffer();
 
 		void Bind();
 
@@ -73,6 +74,9 @@ namespace tron
 		void Buffer(const std::vector<uint16_t>& buffer);
 
 		void Buffer(const std::vector<uint32_t>& buffer);
+
+		[[nodiscard]]
+		GLenum Type() const;
 	};
 }
 

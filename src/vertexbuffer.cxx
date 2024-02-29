@@ -134,6 +134,8 @@ namespace tron
 
 	void IndexBuffer::Buffer(const std::vector<uint8_t>& buffer)
 	{
+		ASSERT_ALIVE;
+
 		VertexBuffer::Buffer(
 				(void*)buffer.data(),
 				buffer.size() * sizeof(uint8_t));
@@ -142,6 +144,8 @@ namespace tron
 
 	void IndexBuffer::Buffer(const std::vector<uint16_t>& buffer)
 	{
+		ASSERT_ALIVE;
+
 		VertexBuffer::Buffer(
 				(void*)buffer.data(),
 				buffer.size() * sizeof(uint16_t));
@@ -150,9 +154,18 @@ namespace tron
 
 	void IndexBuffer::Buffer(const std::vector<uint32_t>& buffer)
 	{
+		ASSERT_ALIVE;
+
 		VertexBuffer::Buffer(
 				(void*)buffer.data(),
 				buffer.size() * sizeof(uint32_t));
 		m_type = GL_UNSIGNED_INT;
+	}
+
+	GLenum IndexBuffer::Type() const
+	{
+		ASSERT_ALIVE;
+
+		return m_type;
 	}
 }
