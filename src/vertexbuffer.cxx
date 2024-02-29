@@ -126,6 +126,12 @@ namespace tron
 		return m_usage;
 	}
 
+	IndexBuffer::IndexBuffer(VertexBufferUsage usage)
+		: VertexBuffer(VertexBufferTarget::ELEMENT_ARRAY_BUFFER, usage),
+		  m_type(GL_INVALID_ENUM)
+	{
+	}
+
 	void IndexBuffer::Buffer(const std::vector<uint8_t>& buffer)
 	{
 		VertexBuffer::Buffer(

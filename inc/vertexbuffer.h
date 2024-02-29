@@ -61,6 +61,8 @@ namespace tron
 		GLenum m_type;
 
 	public:
+		IndexBuffer(VertexBufferUsage usage);
+
 		void Buffer(const std::vector<uint8_t>& buffer);
 
 		void Buffer(const std::vector<uint16_t>& buffer);
