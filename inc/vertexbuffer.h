@@ -53,6 +53,18 @@ namespace tron
 		[[nodiscard]]
 		VertexBufferUsage Usage() const;
 	};
+
+	class IndexBuffer : protected VertexBuffer
+	{
+		GLenum m_type;
+
+	public:
+		void Buffer(const std::vector<uint8_t>& buffer);
+
+		void Buffer(const std::vector<uint16_t>& buffer);
+
+		void Buffer(const std::vector<uint32_t>& buffer);
+	};
 }
 
 
