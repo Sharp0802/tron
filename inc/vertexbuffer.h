@@ -1,8 +1,8 @@
 #ifndef TRON_VERTEXBUFFER_H
 #define TRON_VERTEXBUFFER_H
 
-#include <glm/glm.hpp>
 #include <GL/glew.h>
+#include <glm/glm.hpp>
 #include <cstdint>
 
 namespace tron
@@ -17,7 +17,9 @@ namespace tron
 	{
 		STATIC_DRAW = GL_STATIC_DRAW,
 		DYNAMIC_DRAW = GL_DYNAMIC_DRAW,
-		STREAM_DRAW = GL_STREAM_DRAW
+		STREAM_DRAW = GL_STREAM_DRAW,
+
+		DEFAULT_DRAW = STATIC_DRAW
 	};
 
 	class VertexBuffer
@@ -36,7 +38,7 @@ namespace tron
 		VertexBuffer(const VertexBuffer&) = delete;
 		VertexBuffer() = delete;
 
-		explicit VertexBuffer(VertexBufferTarget target, VertexBufferUsage usage = VertexBufferUsage::STATIC_DRAW);
+		explicit VertexBuffer(VertexBufferTarget target, VertexBufferUsage usage = VertexBufferUsage::DEFAULT_DRAW);
 
 		~VertexBuffer();
 

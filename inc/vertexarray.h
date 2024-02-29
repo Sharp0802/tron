@@ -3,10 +3,7 @@
 
 #include <cstdint>
 #include <GL/glew.h>
-
 #include <glm/glm.hpp>
-
-#include "renderer.h"
 
 namespace tron
 {
