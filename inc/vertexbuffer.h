@@ -63,6 +63,11 @@ namespace tron
 	public:
 		IndexBuffer(VertexBufferUsage usage);
 
+		using VertexBuffer::Bind;
+		using VertexBuffer::Target;
+		using VertexBuffer::Usage;
+		using VertexBuffer::BufferSubData;
+
 		void Buffer(const std::vector<uint8_t>& buffer);
 
 		void Buffer(const std::vector<uint16_t>& buffer);
