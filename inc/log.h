@@ -46,6 +46,7 @@ namespace tron
 		static Log<decltype("GL"_t)>   gl;
 		static Log<decltype("GLFW"_t)> fw;
 		static Log<decltype("CRT"_t)>  crt;
+		static Log<decltype("STBI"_t)> stbi;
 
 		void LogGLParameters();
 
