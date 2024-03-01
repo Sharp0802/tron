@@ -1,3 +1,4 @@
+#include <stdexcept>
 #include "vertexbuffer.h"
 #include "def.h"
 
@@ -33,20 +34,19 @@ namespace tron
 			  m_handle(CreateBuffer()),
 			  m_disposed(false)
 	{
+		Bind();
 	}
 
 #define ASSERT_ALIVE ASSERT(!m_disposed)
 
-	GLuint VertexBuffer::SwapBinding()
+	void VertexBuffer::EnsureBinding() const
 	{
 		ASSERT_ALIVE;
 
 		GLuint old;
 		glGetIntegerv(m_binding, reinterpret_cast<GLint*>(&old));
-
-		Bind();
-
-		return old;
+		if (old != m_handle)
+			throw std::runtime_error("Invalid binding for vertex-buffer.");
 	}
 
 	void VertexBuffer::Bind()
@@ -60,26 +60,13 @@ namespace tron
 	{
 		ASSERT_ALIVE;
 
-		/*
-		 * DO NOT BELIEVE DEVELOPERS TO CALL Buffer() AFTER CALLING SwapBinding().
-		 * glBufferData is not context-free. Context must be load/restore-ed.
-		 */
-		auto old = SwapBinding();
+		EnsureBinding();
 
 		glBufferData(
 				static_cast<GLenum>(m_target),
 				static_cast<ssize_t>(size),
 				buffer,
 				static_cast<GLenum>(m_usage));
-
-		/*
-		 * Restore context
-		 *
-		 * If this is the first VBO, error will be generated on glBindBuffer().
-		 * Just ignore it.
-		 */
-		if (old != m_handle)
-			glBindBuffer(static_cast<GLenum>(m_target), old);
 	}
 
 	VertexBuffer::~VertexBuffer()
@@ -92,26 +79,13 @@ namespace tron
 	{
 		ASSERT_ALIVE;
 
-		/*
-		 * DO NOT BELIEVE DEVELOPERS TO CALL Buffer() AFTER CALLING SwapBinding().
-		 * glBufferData is not context-free. Context must be load/restore-ed.
-		 */
-		auto old = SwapBinding();
+		EnsureBinding();
 
 		glBufferSubData(
 				static_cast<GLenum>(m_target),
 				static_cast<ssize_t>(offset),
 				static_cast<ssize_t>(size),
 				buffer);
-
-		/*
-		 * Restore context
-		 *
-		 * If this is the first VBO, error will be generated on glBindBuffer().
-		 * Just ignore it.
-		 */
-		if (old != m_handle)
-			glBindBuffer(static_cast<GLenum>(m_target), old);
 	}
 
 	VertexBufferTarget VertexBuffer::Target() const
@@ -133,7 +107,7 @@ namespace tron
 	{
 	}
 
-	void IndexBuffer::Buffer(const std::vector<uint8_t>& buffer)
+	void IndexBuffer::Buffer(std::vector<uint8_t> buffer)
 	{
 		ASSERT_ALIVE;
 
@@ -144,7 +118,7 @@ namespace tron
 		m_size = buffer.size();
 	}
 
-	void IndexBuffer::Buffer(const std::vector<uint16_t>& buffer)
+	void IndexBuffer::Buffer(std::vector<uint16_t> buffer)
 	{
 		ASSERT_ALIVE;
 
@@ -155,7 +129,7 @@ namespace tron
 		m_size = buffer.size();
 	}
 
-	void IndexBuffer::Buffer(const std::vector<uint32_t>& buffer)
+	void IndexBuffer::Buffer(std::vector<uint32_t> buffer)
 	{
 		ASSERT_ALIVE;
 

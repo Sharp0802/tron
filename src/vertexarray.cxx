@@ -1,3 +1,4 @@
+#include <stdexcept>
 #include "vertexarray.h"
 #include "def.h"
 
@@ -13,22 +14,17 @@ namespace
 
 namespace tron
 {
-	GLuint VertexArray::SwapBinding()
-	{
-		GLuint old;
-		glGetIntegerv(GL_VERTEX_ARRAY_BINDING, reinterpret_cast<GLint*>(&old));
-
-		Bind();
-
-		return old;
-	}
-
 	VertexArray::VertexArray(std::initializer_list<VertexAttributeInfo> attributes)
 		: m_attributes(attributes),
 		  m_handle(CreateVertexArray()),
 		  m_disposed(false)
 	{
-		auto old = SwapBinding();
+		glBindVertexArray(m_handle);
+
+		GLint vbo;
+		glGetIntegerv(GL_ARRAY_BUFFER_BINDING, &vbo);
+		if (vbo == GL_NONE)
+			throw std::runtime_error("the binding to GL_ARRAY_BUFFER must not be null to initialize VertexArray");
 
 		size_t stride = 0;
 		for (const auto& attribute: m_attributes)
@@ -48,14 +44,6 @@ namespace tron
 
 			offset += attribute.Size;
 		}
-
-		/*
-		 * Restore context
-		 *
-		 * If this is the first VAO, error will be generated on glBindVertexArray().
-		 * Just ignore it.
-		 */
-		glBindVertexArray(old);
 	}
 
 	VertexArray::~VertexArray()

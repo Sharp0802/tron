@@ -80,8 +80,6 @@ namespace tron
 
 		bool m_disposed;
 
-		GLuint SwapBinding();
-
 	public:
 		VertexArray& operator=(const VertexArray&) = delete;
 		VertexArray(const VertexArray&) = delete;

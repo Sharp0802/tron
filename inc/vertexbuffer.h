@@ -29,7 +29,7 @@ namespace tron
 		const GLenum m_binding;
 		const GLuint m_handle;
 
-		GLuint SwapBinding();
+		void EnsureBinding() const;
 
 	protected:
 		bool m_disposed;
@@ -70,11 +70,11 @@ namespace tron
 		using VertexBuffer::Usage;
 		using VertexBuffer::BufferSubData;
 
-		void Buffer(const std::vector<uint8_t>& buffer);
+		void Buffer(std::vector<uint8_t> buffer);
 
-		void Buffer(const std::vector<uint16_t>& buffer);
+		void Buffer(std::vector<uint16_t> buffer);
 
-		void Buffer(const std::vector<uint32_t>& buffer);
+		void Buffer(std::vector<uint32_t> buffer);
 
 		[[nodiscard]]
 		GLenum Type() const;
