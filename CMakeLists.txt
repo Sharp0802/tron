@@ -58,6 +58,11 @@ ELSE ()
             GLEW::GLEW)
 ENDIF ()
 
+file(
+        DOWNLOAD https://raw.githubusercontent.com/nothings/stb/master/stb_image.h
+        ${CMAKE_CACHEFILE_DIR}/.tmp/inc/stb_image.h
+)
+
 file(GLOB_RECURSE SOURCES src/*.cxx)
 
 add_executable(tron ${SOURCES})
