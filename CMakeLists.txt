@@ -3,7 +3,14 @@ project(tron LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 26)
 
-set(BINARY_DIR ${CMAKE_CURRENT_LIST_DIR}/bin)
+set(BINARY_DIR ${CMAKE_CURRENT_LIST_DIR}/bin/${CMAKE_BUILD_TYPE})
+
+IF (CMAKE_BUILD_TYPE STREQUAL "Debug")
+    add_definitions(-D_DEBUG)
+    add_compile_options(-g -ggdb -Og)
+ELSE()
+    add_definitions(-D_RELEASE)
+ENDIF()
 
 IF (WIN32)
     execute_process(
