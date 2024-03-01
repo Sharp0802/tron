@@ -10,9 +10,15 @@ namespace tron
 
 	class Mesh : public IRenderable
 	{
-		VertexArray  m_vao;
-		VertexBuffer m_vbo;
+		/*
+		 * DO NOT CHANGE ORDER OF FIELDS.
+		 *
+		 * VertexArray must be initialized after other VertexBuffers already initialized
+		 * Because VertexArray requires bindings from other VertexBuffers.
+		 */
 		IndexBuffer  m_ebo;
+		VertexBuffer m_vbo;
+		VertexArray  m_vao;
 
 	public:
 		Mesh(
@@ -24,6 +30,8 @@ namespace tron
 
 		[[nodiscard]]
 		IndexBuffer& EBO();
+
+		void Bind();
 
 		void Draw() override;
 	};
