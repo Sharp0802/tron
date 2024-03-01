@@ -3,6 +3,8 @@
 #include <GL/glew.h>
 #define GLFW_DLL
 #include <GLFW/glfw3.h>
+#define STB_IMAGE_IMPLEMENTATION
+#include <stb_image.h>
 
 #include "log.h"
 #include "program.h"
@@ -108,10 +110,10 @@ int main()
 
 
     float points[] = {
-			-0.5f, 0.5f, 0.0f, 1, 0, 0,
-			0.5f, 0.5f, 0.0f, 0, 1, 0,
-			0.5f, -0.5f, 0.0f, 0, 0, 1,
-			-0.5f, -0.5f, 0.0f, 1, 0, 0
+			0.5f,  0.5f,  0.0f, 0, 1, 0, 1, 1,
+			0.5f,  -0.5f, 0.0f, 0, 0, 1, 1, 0,
+			-0.5f, -0.5f, 0.0f, 1, 0, 0, 0, 0,
+			-0.5f, 0.5f,  0.0f, 1, 0, 0, 0, 1,
     };
 
 	std::vector<uint16_t> indices = {
@@ -122,10 +124,33 @@ int main()
 	Mesh mesh = {
 			VertexAttributeInfo::Create<glm::vec3>(),
 			VertexAttributeInfo::Create<glm::vec3>(),
+			VertexAttributeInfo::Create<glm::vec2>(),
 	};
 	mesh.Bind();
 	mesh.VBO().Buffer(points, sizeof points);
 	mesh.EBO().Buffer(indices);
+
+
+	int width, height, nrChannels;
+	auto* data = stbi_load("res/tex/brick_wall.jpg", &width, &height, &nrChannels, 0);
+	if (!data)
+	{
+		log::stbi.err() << "Failed to load texture" << std::endl;
+	}
+
+	GLuint tex;
+	glGenTextures(1, &tex);
+	glBindTexture(GL_TEXTURE_2D, tex);
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+	glGenerateMipmap(GL_TEXTURE_2D);
+
+	stbi_image_free(data);
 
 	Program program;
 
@@ -150,6 +175,7 @@ int main()
 
 		program.Use();
 
+		glBindTexture(GL_TEXTURE_2D, tex);
 		mesh.Draw();
 
         glfwSwapBuffers(window);
