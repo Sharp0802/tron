@@ -72,7 +72,8 @@ file(
 ###################################################
 # Generic Configurations                          #
 ###################################################
-file(GLOB_RECURSE SOURCES src/*.cxx)
+file(GLOB_RECURSE SOURCES   src/*.cxx)
+file(GLOB_RECURSE RESOURCES res/**)
 
 add_executable(tron ${SOURCES})
 target_include_directories(tron PRIVATE
@@ -88,4 +89,5 @@ add_custom_command(
         COMMAND ${CMAKE_COMMAND} -E copy_directory_if_different
             ${CMAKE_CURRENT_LIST_DIR}/res
             ${BINARY_DIR}/res
+        DEPENDS ${RESOURCES}
 )
