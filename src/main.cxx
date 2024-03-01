@@ -68,8 +68,8 @@ int main()
     }
 
 	/*
-	 * To support MacOS, We should use OpenGL 3.2 core profile.
-	 * This let MacOS to use OpenGL 4.
+	 * To support macOS, We should use OpenGL 3.2 core profile.
+	 * This let macOS use OpenGL 4.
 	 */
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
@@ -129,8 +129,8 @@ int main()
 
 	Program program;
 
-	auto& frag = program.AttachShader("sample.f.glsl");
-	auto& vert = program.AttachShader("sample.v.glsl");
+	program.AttachShader("sample.f.glsl");
+	program.AttachShader("sample.v.glsl");
 
 	program.Link();
 	program.Use();
