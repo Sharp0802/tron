@@ -8,6 +8,7 @@
 #include "program.h"
 #include "vertexbuffer.h"
 #include "vertexarray.h"
+#include "mesh.h"
 
 #if _WIN32
 #include <windows.h>
@@ -99,7 +100,7 @@ int main()
     const GLubyte* renderer = glGetString(GL_RENDERER);
     const GLubyte* version  = glGetString(GL_VERSION);
 
-	log::gl.out() << "Renderer: " << renderer << std::endl;
+	log::gl.out() << "IRenderable: " << renderer << std::endl;
 	log::gl.out() << "Version : " << version << std::endl;
 
     glEnable(GL_DEPTH_TEST);
@@ -107,20 +108,24 @@ int main()
 
 
     float points[] = {
-         0.0f,  0.5f,  0.0f, 1.0f, 0.0f, 0.0f,
-         0.5f, -0.5f,  0.0f, 0.0f, 1.0f, 0.0f,
-        -0.5f, -0.5f,  0.0f, 0.0f, 0.0f, 1.0f
+			-0.5f, 0.5f, 0.0f, 1, 0, 0,
+			0.5f, 0.5f, 0.0f, 0, 1, 0,
+			0.5f, -0.5f, 0.0f, 0, 0, 1,
+			-0.5f, -0.5f, 0.0f, 1, 0, 0
     };
 
-	VertexBuffer vbo(VertexBufferTarget::ARRAY_BUFFER);
-	vbo.Buffer(points, sizeof points);
-	vbo.Bind();
-
-	VertexArray vao = {
-		VertexAttributeInfo::Create<glm::vec3>(),
-		VertexAttributeInfo::Create<glm::vec3>(),
+	std::vector<uint16_t> indices = {
+		0, 1, 2,
+		0, 2, 3
 	};
-	vao.Bind();
+
+	Mesh mesh = {
+			VertexAttributeInfo::Create<glm::vec3>(),
+			VertexAttributeInfo::Create<glm::vec3>(),
+	};
+	mesh.Bind();
+	mesh.VBO().Buffer(points, sizeof points);
+	mesh.EBO().Buffer(indices);
 
 	Program program;
 
@@ -145,8 +150,7 @@ int main()
 
 		program.Use();
 
-		vao.Bind();
-        glDrawArrays(GL_TRIANGLES, 0, 3);
+		mesh.Draw();
 
         glfwSwapBuffers(window);
 		glfwPollEvents();
