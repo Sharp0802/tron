@@ -5,6 +5,9 @@ set(CMAKE_CXX_STANDARD 26)
 
 set(BINARY_DIR ${CMAKE_CURRENT_LIST_DIR}/bin/${CMAKE_BUILD_TYPE})
 
+###################################################
+# Build Profiles                                  #
+###################################################
 IF (CMAKE_BUILD_TYPE STREQUAL "Debug")
     add_definitions(-D_DEBUG)
     add_compile_options(-g -ggdb -Og)
@@ -12,6 +15,9 @@ ELSE()
     add_definitions(-D_RELEASE)
 ENDIF()
 
+###################################################
+# Platform Dependants                             #
+###################################################
 IF (WIN32)
     execute_process(
             COMMAND powershell -file ${CMAKE_CURRENT_LIST_DIR}/sh/fetch.ps1
@@ -63,6 +69,9 @@ file(
         ${CMAKE_CACHEFILE_DIR}/.tmp/inc/stb_image.h
 )
 
+###################################################
+# Generic Configurations                          #
+###################################################
 file(GLOB_RECURSE SOURCES src/*.cxx)
 
 add_executable(tron ${SOURCES})
@@ -76,7 +85,7 @@ set_target_properties(tron PROPERTIES
 add_custom_command(
         TARGET tron
         PRE_BUILD
-        COMMAND ${CMAKE_COMMAND} -E copy_directory
+        COMMAND ${CMAKE_COMMAND} -E copy_directory_if_different
             ${CMAKE_CURRENT_LIST_DIR}/res
             ${BINARY_DIR}/res
 )
