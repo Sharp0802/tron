@@ -56,6 +56,7 @@ namespace tron
 	{
 		if (m_disposed)
 			throw std::runtime_error("An object already disposed.");
+		glActiveTexture(m_handle);
 		glBindTexture(GL_TEXTURE_2D, m_handle);
 	}
 }
