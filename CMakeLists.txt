@@ -31,7 +31,6 @@ IF (WIN32)
     )
 
     link_directories(${CMAKE_CACHEFILE_DIR}/.tmp/lib/x64)
-    include_directories(${CMAKE_CACHEFILE_DIR}/.tmp/inc)
 
     link_libraries(
             opengl32
@@ -68,6 +67,7 @@ file(
         DOWNLOAD https://raw.githubusercontent.com/nothings/stb/master/stb_image.h
         ${CMAKE_CACHEFILE_DIR}/.tmp/inc/stb_image.h
 )
+include_directories(${CMAKE_CACHEFILE_DIR}/.tmp/inc)
 
 ###################################################
 # Generic Configurations                          #
