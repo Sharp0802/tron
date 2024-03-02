@@ -3,6 +3,9 @@
 #include <GL/glew.h>
 #define GLFW_DLL
 #include <GLFW/glfw3.h>
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 #include "log.h"
 #include "program.h"
@@ -134,11 +137,16 @@ int main()
 	Program program;
 
 	program.AttachShader("sample.f.glsl");
-	program.AttachShader("sample.v.glsl");
+	auto& vert = program.AttachShader("sample.v.glsl");
 
 	program.Link();
 	program.Use();
 	program.Validate();
+
+
+
+	auto transformID = program.GetLocation("transform");
+
 
 
     while (!glfwWindowShouldClose(window))
@@ -152,7 +160,13 @@ int main()
 		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+		glm::mat4 transform(1.f);
+		transform = glm::rotate(transform, (float)glfwGetTime(), glm::vec3(0, 0, 1));
+		transform = glm::translate(transform, glm::vec3(0, 0.5, 0));
+		transform = glm::rotate(transform, (float)glfwGetTime(), glm::vec3(1, 1, 0));
+
 		program.Use();
+		vert.Set(transformID, transform);
 
 		tex.Bind();
 		mesh.Draw();
