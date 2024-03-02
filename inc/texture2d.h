@@ -4,6 +4,8 @@
 #include <GL/glew.h>
 #include <string>
 
+#include "texture.h"
+
 namespace tron
 {
 
@@ -14,7 +16,12 @@ namespace tron
 		bool m_disposed;
 
 	public:
-		Texture2D(const std::string& img);
+		Texture2D(
+				const std::string& img,
+				TextureWrap wrap = TextureWrap::DEFAULT,
+				TextureFilter filter = TextureFilter::DEFAULT,
+				TextureFormat format = TextureFormat::DEFAULT,
+				TextureType type = TextureType::DEFAULT);
 
 		~Texture2D();
 

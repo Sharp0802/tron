@@ -1,8 +1,9 @@
 #include "texture2d.h"
 #include "log.h"
 
-#include <sstream>
 #define STB_IMAGE_IMPLEMENTATION
+
+#include <sstream>
 #include <stb_image.h>
 
 namespace
@@ -13,15 +14,38 @@ namespace
 		glGenTextures(1, &ret);
 		return ret;
 	}
+
+	tron::TextureFormat GetDefaultFormat(int nChannel)
+	{
+		switch (nChannel)
+		{
+		case 1:
+			return tron::TextureFormat::R;
+		case 2:
+			return tron::TextureFormat::RG;
+		case 3:
+			return tron::TextureFormat::RGB;
+		case 4:
+			return tron::TextureFormat::RGBA;
+
+		default:
+			throw std::range_error("Channel number must be in [1-4].");
+		}
+	}
 }
 
 namespace tron
 {
-	Texture2D::Texture2D(const std::string& img)
-		: m_handle(GenTexture2D()), m_disposed(false)
+	Texture2D::Texture2D(
+			const std::string& img,
+			TextureWrap wrap,
+			TextureFilter filter,
+			TextureFormat format,
+			TextureType type)
+			: m_handle(GenTexture2D()), m_disposed(false)
 	{
-		int width, height, nrChannels;
-		auto* data = stbi_load(img.data(), &width, &height, &nrChannels, 0);
+		int width, height, nChannel;
+		auto* data = stbi_load(img.data(), &width, &height, &nChannel, 0);
 		if (!data)
 		{
 			std::stringstream ss;
@@ -33,13 +57,20 @@ namespace tron
 
 		glBindTexture(GL_TEXTURE_2D, m_handle);
 
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+		auto glWrap = static_cast<GLint>(wrap);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, glWrap);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, glWrap);
 
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+		auto glFilter = static_cast<GLint>(filter);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, glFilter);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, glFilter);
 
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+		auto glFormat         = static_cast<GLenum>(
+				format == decltype(format)::DEFAULT ? GetDefaultFormat(nChannel) : format);
+		auto glInternalFormat = static_cast<GLint>(glFormat);
+		auto glType           = static_cast<GLenum>(type);
+
+		glTexImage2D(GL_TEXTURE_2D, 0, glInternalFormat, width, height, 0, glFormat, glType, data);
 		glGenerateMipmap(GL_TEXTURE_2D);
 
 		stbi_image_free(data);
