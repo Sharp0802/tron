@@ -1,4 +1,5 @@
 #include <sstream>
+#include <glm/gtc/type_ptr.hpp>
 #include "shader.h"
 
 #include "memorymappedfile.h"
@@ -126,21 +127,21 @@ namespace tron
 	template<>
 	void shader_detail::Set<glm::mat2>(GLint loc, glm::mat2 value)
 	{
-		glUniformMatrix2fv(loc, 4, GL_FALSE, reinterpret_cast<const GLfloat*>(&value));
+		glUniformMatrix2fv(loc, 1, GL_FALSE, glm::value_ptr(value));
 		ASSERT_SUCCEED_SET;
 	}
 
 	template<>
 	void shader_detail::Set<glm::mat3>(GLint loc, glm::mat3 value)
 	{
-		glUniformMatrix3fv(loc, 9, GL_FALSE, reinterpret_cast<const GLfloat*>(&value));
+		glUniformMatrix3fv(loc, 1, GL_FALSE, glm::value_ptr(value));
 		ASSERT_SUCCEED_SET;
 	}
 
 	template<>
 	void shader_detail::Set<glm::mat4>(GLint loc, glm::mat4 value)
 	{
-		glUniformMatrix4fv(loc, 16, GL_FALSE, reinterpret_cast<const GLfloat*>(&value));
+		glUniformMatrix4fv(loc, 1, GL_FALSE, glm::value_ptr(value));
 		ASSERT_SUCCEED_SET;
 	}
 }
