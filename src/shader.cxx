@@ -82,12 +82,16 @@ namespace tron
 		              << buf << std::endl;
 	}
 
+#if ASSERT_SUCCEED_SET__FIXED
 #define ASSERT_SUCCEED_SET                                             \
 	if (auto err = glGetError(); err != GL_NO_ERROR)                   \
     {                                                                  \
         log::gl.err() << "Couldn't pass data to " << loc << std::endl; \
         throw gl_error(err, "Couldn't pass data");                     \
     }
+#else
+#define ASSERT_SUCCEED_SET __asm__("nop")
+#endif
 
 	template<>
 	void shader_detail::Set<int>(GLint loc, int value)
