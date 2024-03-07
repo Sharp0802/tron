@@ -1,4 +1,6 @@
 #include <stdexcept>
+#include <vector>
+#include <unordered_map>
 #include "vertexbuffer.h"
 #include "def.h"
 

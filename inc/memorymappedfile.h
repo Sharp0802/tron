@@ -17,6 +17,7 @@ namespace tron
 		HANDLE m_mmf;
 #else
         int    m_fd;
+        size_t m_size;
 #endif
 		void*  m_ptr;
 

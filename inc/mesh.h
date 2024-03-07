@@ -1,6 +1,8 @@
 #ifndef TRON_MESH_H
 #define TRON_MESH_H
 
+#include <vector>
+#include <unordered_map>
 #include "vertexarray.h"
 #include "vertexbuffer.h"
 #include "irenderable.h"
