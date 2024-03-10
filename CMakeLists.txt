@@ -1,6 +1,11 @@
 cmake_minimum_required(VERSION 3.25)
 project(tron LANGUAGES CXX)
 
+
+set(CMAKE_C_COMPILER clang)
+set(CMAKE_CXX_COMPILER clang++)
+
+
 set(CMAKE_CXX_STANDARD 26)
 
 set(BINARY_DIR ${CMAKE_CURRENT_LIST_DIR}/bin/${CMAKE_BUILD_TYPE})
@@ -14,6 +19,7 @@ IF (CMAKE_BUILD_TYPE STREQUAL "Debug")
 ELSE()
     add_definitions(-D_RELEASE)
 ENDIF()
+add_compile_options(-Wno-gnu-string-literal-operator-template -fdeclspec)
 
 ###################################################
 # Platform Dependants                             #
