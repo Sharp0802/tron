@@ -69,6 +69,14 @@ namespace tron
 
 		DEFAULT = UNSIGNED_BYTE
 	};
+	
+	class Texture
+	{
+	public:
+	    virtual ~Texture() = default;
+	
+	    virtual void Bind() = 0;
+	};
 }
 
 #endif //TRON_TEXTURE_H
