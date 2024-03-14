@@ -28,14 +28,20 @@ namespace tron
 				VertexBufferUsage usage = VertexBufferUsage::DEFAULT_DRAW);
 
 		[[nodiscard]]
-		VertexBuffer& VBO();
+		VertexBuffer& get_VBO();
 
 		[[nodiscard]]
-		IndexBuffer& EBO();
+		IndexBuffer& get_EBO();
 
 		void Bind();
 
 		void Draw() override;
+
+		__declspec(property(get=get_VBO))
+		VertexBuffer& VBO;
+
+		__declspec(property(get=get_EBO))
+		IndexBuffer& EBO;
 	};
 
 } // tron

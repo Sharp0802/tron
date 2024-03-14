@@ -9,12 +9,13 @@
 #include <glm/gtc/type_ptr.hpp>
 
 #include "log.h"
-#include "program.h"
-#include "vertexbuffer.h"
-#include "vertexarray.h"
 #include "mesh.h"
+#include "program.h"
 #include "texture2d.h"
-#include "transform.h"
+#include "vertexarray.h"
+#include "vertexbuffer.h"
+
+#include <transform.h>
 
 #if _WIN32
 #include <windows.h>
@@ -108,7 +109,7 @@ int main()
     const GLubyte* renderer = glGetString(GL_RENDERER);
     const GLubyte* version  = glGetString(GL_VERSION);
     
-    log::gl.out() << "IRenderable: " << renderer << std::endl;
+    log::gl.out() << "Renderer: " << renderer << std::endl;
     log::gl.out() << "Version : " << version << std::endl;
     
     glEnable(GL_DEPTH_TEST);
@@ -161,8 +162,8 @@ int main()
             VertexAttributeInfo::Create<glm::vec2>(),
     };
     mesh.Bind();
-    mesh.VBO().Buffer(points, sizeof points);
-    mesh.EBO().Buffer(indices);
+    mesh.VBO.Buffer(points, sizeof points);
+    mesh.EBO.Buffer(indices);
     
     Texture2D tex("res/tex/brick_wall.jpg");
     
@@ -180,13 +181,12 @@ int main()
     auto viewID = program.GetLocation("view");
     auto modelID = program.GetLocation("model");
     
-    
-    glm::mat4 model(1.0f);
-    
     glm::mat4 view(1.0f);
     view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
     
-    
+    Transform transform;
+	
+	transform.Rotation += glm::vec3(glm::radians(45.f), 0, 0);
     
     while (!glfwWindowShouldClose(window))
     {
@@ -200,11 +200,11 @@ int main()
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         
         glm::mat4 projection = glm::perspective(glm::radians(45.0f), (float)g_glWidth / (float)g_glHeight, 0.1f, 100.f);
-        
-        model = glm::rotate(model, glm::radians(1.f), glm::vec3(0.5f, 1.0f, 0.0f));
-        
+    	
+    	transform.Rotation += glm::vec3(0, 0.0001, 0);
+    	
         program.Use();
-        vert.Set(modelID, model);
+        vert.Set(modelID, transform.Matrix);
         vert.Set(viewID, view);
         vert.Set(projectionID, projection);
         

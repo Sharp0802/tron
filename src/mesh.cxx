@@ -10,12 +10,12 @@ namespace tron
 	{
 	}
 
-	VertexBuffer& Mesh::VBO()
+	VertexBuffer& Mesh::get_VBO()
 	{
 		return m_vbo;
 	}
 
-	IndexBuffer& Mesh::EBO()
+	IndexBuffer& Mesh::get_EBO()
 	{
 		return m_ebo;
 	}
