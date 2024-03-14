@@ -19,7 +19,7 @@ IF (CMAKE_BUILD_TYPE STREQUAL "Debug")
 ELSE()
     add_definitions(-D_RELEASE)
 ENDIF()
-add_compile_options(-Wno-gnu-string-literal-operator-template -fdeclspec)
+add_compile_options(-Wno-gnu-string-literal-operator-template -fdeclspec -fms-extensions)
 
 ###################################################
 # Platform Dependants                             #
