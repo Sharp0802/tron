@@ -2,7 +2,7 @@
 #include <glm/gtc/type_ptr.hpp>
 #include "shader.h"
 
-#include "memorymappedfile.h"
+#include "sys/memorymappedfile.h"
 #include "GL/except.h"
 #include "log.h"
 
@@ -41,8 +41,8 @@ namespace tron
         if (m_handle == GL_INVALID_ENUM)
             throw gl_error("`type` is not an accepted value");
 
-        const MemoryMappedFile mmf(m_name);
-        const auto             addr = mmf.GetAddress();
+        const sys::MemoryMappedFile mmf(m_name);
+        const auto                  addr = mmf.GetAddress();
 
         glShaderSource(m_handle, 1, reinterpret_cast<const GLchar* const*>(&addr), nullptr);
         glCompileShader(m_handle);
