@@ -20,10 +20,10 @@ namespace tron
         ptr<Program> get_Program();
         ptr<Texture> get_Texture();
         
-        __declspec(property(put=get_Program))
+        __declspec(property(get=get_Program))
         const ptr<Program> Program;
 
-        __declspec(property(put=get_Texture))
+        __declspec(property(get=get_Texture))
         const ptr<Texture> Texture;
 
         void Bind();
