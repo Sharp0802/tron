@@ -225,8 +225,6 @@ int main()
 
 	auto object = std::make_shared<MeshRenderer>(material, mesh);
 	
-
-	object->Transform->Position = glm::vec3(1, 0, 0);
 	object->Transform->Rotation = glm::vec3(glm::radians(45.f), 0, 0);
 
 	double last = glfwGetTime();
@@ -246,6 +244,10 @@ int main()
 				glfwSetWindowShouldClose(g_window, 1);
 
 			object->Transform->Rotation += glm::vec3(0, delta, 0);
+
+			auto pos = object->Transform->Position;
+			pos.y = sinf(glfwGetTime()) * 0.3f;
+			object->Transform->Position = pos;
 		}
 
 		BeginDraw();
