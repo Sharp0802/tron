@@ -40,14 +40,29 @@ namespace tron
         __declspec(property(get=get_VBO))
         VertexBuffer& VBO;
 
-		__declspec(property(get=get_EBO))
-		IndexBuffer& EBO;
-	};
         __declspec(property(get=get_EBO))
         IndexBuffer& EBO;
     };
 }
 
-} // tron
+namespace std
+{
+    using namespace tron;
+
+    inline shared_ptr<_NonArray<Mesh>>
+    make_shared_mesh(
+        std::initializer_list<VertexAttributeInfo>&& attributes)
+    {
+        return std::make_shared<Mesh>(attributes);
+    }
+
+    inline shared_ptr<_NonArray<Mesh>>
+    make_shared_mesh(
+        std::initializer_list<VertexAttributeInfo>&& attributes,
+        VertexBufferUsage&& usage)
+    {
+        return std::make_shared<Mesh>(attributes, usage);
+    }
+}
 
 #endif //TRON_MESH_H
