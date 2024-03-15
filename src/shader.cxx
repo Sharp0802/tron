@@ -3,7 +3,7 @@
 #include "shader.h"
 
 #include "sys/memorymappedfile.h"
-#include "GL/except.h"
+#include "gl/except.h"
 #include "log.h"
 
 namespace

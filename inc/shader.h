@@ -60,7 +60,13 @@ namespace tron
 		static void PrintLog(GLuint handle);
 
 		template<typename T>
-		void Set(GLint loc, T value)
+		void Set(const GLint loc, T value)
+		{
+			return shader_detail::Set<T>(loc, value);
+		}
+
+		template<typename T>
+		static void SetUnsafe(const GLint loc, T value)
 		{
 			return shader_detail::Set<T>(loc, value);
 		}
