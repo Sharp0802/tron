@@ -73,6 +73,18 @@ file(
         DOWNLOAD https://raw.githubusercontent.com/nothings/stb/master/stb_image.h
         ${CMAKE_CACHEFILE_DIR}/.tmp/inc/stb_image.h
 )
+file(
+        DOWNLOAD https://raw.githubusercontent.com/dotnet/runtime/main/src/native/corehost/nethost/nethost.h
+        ${CMAKE_CACHEFILE_DIR}/.tmp/inc/nethost.h
+)
+file(
+        DOWNLOAD https://raw.githubusercontent.com/dotnet/runtime/main/src/native/corehost/coreclr_delegates.h
+        ${CMAKE_CACHEFILE_DIR}/.tmp/inc/coreclr_delegates.h
+)
+file(
+        DOWNLOAD https://raw.githubusercontent.com/dotnet/runtime/main/src/native/corehost/hostfxr.h
+        ${CMAKE_CACHEFILE_DIR}/.tmp/inc/hostfxr.h
+)
 include_directories(${CMAKE_CACHEFILE_DIR}/.tmp/inc)
 
 ###################################################
