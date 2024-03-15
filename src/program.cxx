@@ -4,7 +4,7 @@
 #include "program.h"
 #include "shader.h"
 #include "log.h"
-#include "GL/except.h"
+#include "gl/except.h"
 
 namespace fs = std::filesystem;
 
