@@ -15,7 +15,8 @@ A simple game with OpenGL 4.5, written in C++26.
 
 ### Building
 
-- C++26 compatible compiler \[Tested on GCC\]
+- `clang`
+  - Tested on `clang-17`, `clang-18`
 - CMake 3.25 or above
 - Internet connection (project automatically downloads dependencies)
 - \[On Linux\]
