@@ -1,10 +1,7 @@
 #ifndef RESOURCE_H
 #define RESOURCE_H
 
-#include <string>
-#include <utility>
-#include <fstream>
-#include <limits>
+#include "pch.h"
 
 namespace tron
 {

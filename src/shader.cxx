@@ -1,7 +1,5 @@
-#include <sstream>
-#include <glm/gtc/type_ptr.hpp>
+#include "pch.h"
 #include "shader.h"
-
 #include "sys/memorymappedfile.h"
 #include "gl/except.h"
 #include "log.h"

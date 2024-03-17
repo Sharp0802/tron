@@ -1,9 +1,7 @@
 #ifndef TRON_TEXTURE2D_H
 #define TRON_TEXTURE2D_H
 
-#include <GL/glew.h>
-#include <string>
-
+#include "pch.h"
 #include "texture.h"
 
 namespace tron

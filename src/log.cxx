@@ -1,6 +1,4 @@
-#include <GL/glew.h>
-#include <sstream>
-
+#include "pch.h"
 #include "log.h"
 
 namespace tron

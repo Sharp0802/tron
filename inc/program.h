@@ -1,11 +1,7 @@
 #ifndef TRON_PROGRAM_H
 #define TRON_PROGRAM_H
 
-#include <GL/glew.h>
-#include <string>
-#include <vector>
-#include <memory>
-
+#include "pch.h"
 #include "shader.h"
 
 namespace tron

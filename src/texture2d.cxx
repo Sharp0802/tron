@@ -1,9 +1,8 @@
+#include "pch.h"
 #include "texture2d.h"
 #include "log.h"
 
 #define STB_IMAGE_IMPLEMENTATION
-
-#include <sstream>
 #include <stb_image.h>
 
 namespace

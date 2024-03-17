@@ -1,5 +1,4 @@
-#include <stdexcept>
-#include <vector>
+#include "pch.h"
 #include "vertexarray.h"
 #include "def.h"
 

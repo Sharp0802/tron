@@ -1,8 +1,7 @@
 #ifndef TRON_LOG_H
 #define TRON_LOG_H
 
-#include <iostream>
-#include <GL/glew.h>
+#include "pch.h"
 
 namespace tron
 {

@@ -1,9 +1,6 @@
 #ifndef STDEXCEPT_H
 #define STDEXCEPT_H
 
-#include <system_error>
-#include <GL/glew.h>
-
 struct gl_category final : std::error_category
 {
 	[[nodiscard]]

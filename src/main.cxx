@@ -1,12 +1,6 @@
 #include <iostream>
 
-#define GLFW_DLL
-
-#include <GL/glew.h>
-#include <GLFW/glfw3.h>
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
+#include "pch.h"
 
 #include "log.h"
 #include "mesh.h"
@@ -19,9 +13,7 @@
 #include "material.h"
 #include "meshrenderer.h"
 #include "transform.h"
-
-#include <thread>
-#include <sys/window.h>
+#include "sys/window.h"
 
 #if _WIN32
 #include <windows.h>

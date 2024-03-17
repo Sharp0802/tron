@@ -1,17 +1,5 @@
 #include "sys/memorymappedfile.h"
 
-#include <system_error>
-
-#ifdef _WIN32
-#include <windows.h>
-#include <vector>
-#else
-#include <sys/stat.h>
-#include <sys/mman.h>
-#include <sys/unistd.h>
-#include <sys/fcntl.h>
-#endif
-
 namespace tron::sys
 {
 #ifdef _WIN32

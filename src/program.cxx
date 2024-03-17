@@ -1,6 +1,4 @@
-#include <filesystem>
-#include <iostream>
-
+#include "pch.h"
 #include "program.h"
 #include "shader.h"
 #include "log.h"

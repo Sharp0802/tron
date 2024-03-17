@@ -1,13 +1,8 @@
 #ifndef SHADER_H
 #define SHADER_H
 
-#include <GL/glew.h>
-
-#include <glm/glm.hpp>
-
+#include "pch.h"
 #include "resource.h"
-
-#include <unordered_map>
 
 namespace tron
 {

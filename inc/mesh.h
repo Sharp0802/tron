@@ -1,12 +1,11 @@
 #ifndef TRON_MESH_H
 #define TRON_MESH_H
 
-#include <def.h>
-#include <memory>
-#include <unordered_map>
+#include "pch.h"
 #include "vertexarray.h"
 #include "vertexbuffer.h"
 #include "irenderable.h"
+#include "def.h"
 
 namespace tron
 {

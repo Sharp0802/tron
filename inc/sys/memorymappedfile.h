@@ -1,12 +1,7 @@
 #ifndef MEMORYMAPPEDFILE_H
 #define MEMORYMAPPEDFILE_H
 
-#if _WIN32
-#include <windows.h>
-#endif
-#include <string>
-
-#include "resource.h"
+#include "pch.h"
 
 namespace tron::sys
 {

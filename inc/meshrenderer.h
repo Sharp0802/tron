@@ -1,6 +1,7 @@
 ﻿#ifndef OBJECT_H
 #define OBJECT_H
 
+#include "pch.h"
 #include "transform.h"
 #include "mesh.h"
 #include "material.h"

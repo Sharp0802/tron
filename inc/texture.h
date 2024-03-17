@@ -1,8 +1,7 @@
 #ifndef TRON_TEXTURE_H
 #define TRON_TEXTURE_H
 
-#include <GL/glew.h>
-#include <limits>
+#include "pch.h"
 
 namespace tron
 {

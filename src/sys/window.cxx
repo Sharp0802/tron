@@ -1,12 +1,6 @@
-#include <log.h>
-#include <algorithm>
-#include <GLFW/glfw3.h>
-#include <utility>
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
-
+#include "pch.h"
 #include "sys/window.h"
+#include "log.h"
 
 namespace tron::sys
 {

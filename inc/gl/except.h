@@ -1,9 +1,7 @@
 #ifndef EXCEPT_H
 #define EXCEPT_H
 
-#include <system_error>
-#include <GL/glew.h>
-
+#include "pch.h"
 #include "stdexcept.h"
 
 struct gl_error final : public std::system_error

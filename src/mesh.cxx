@@ -1,7 +1,5 @@
-#include <system_error>
+#include "pch.h"
 #include "mesh.h"
-
-#include <vector>
 
 namespace tron
 {

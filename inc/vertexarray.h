@@ -1,9 +1,7 @@
 #ifndef TRON_VERTEXARRAY_H
 #define TRON_VERTEXARRAY_H
 
-#include <vector>
-#include <GL/glew.h>
-#include <glm/glm.hpp>
+#include "pch.h"
 
 namespace tron
 {

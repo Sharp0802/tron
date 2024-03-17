@@ -1,9 +1,7 @@
 #ifndef TRON_VERTEXBUFFER_H
 #define TRON_VERTEXBUFFER_H
 
-#include <GL/glew.h>
-#include <glm/glm.hpp>
-#include <cstdint>
+#include "pch.h"
 
 namespace tron
 {

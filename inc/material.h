@@ -1,8 +1,7 @@
 #ifndef MATERIAL_H
 #define MATERIAL_H
 
-#include <memory>
-
+#include "pch.h"
 #include "program.h"
 #include "texture.h"
 #include "def.h"

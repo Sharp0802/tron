@@ -1,11 +1,7 @@
 #ifndef WINDOW_H
 #define WINDOW_H
 
-#include <string>
-#include <vector>
-#include <GLFW/glfw3.h>
-#include <glm/glm.hpp>
-
+#include "pch.h"
 #include "irenderable.h"
 
 namespace tron::sys

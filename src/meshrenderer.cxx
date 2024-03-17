@@ -1,4 +1,5 @@
-﻿#include "meshrenderer.h"
+﻿#include "pch.h"
+#include "meshrenderer.h"
 
 namespace tron
 {
