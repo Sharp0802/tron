@@ -94,6 +94,7 @@ file(GLOB_RECURSE SOURCES   src/*.cxx)
 file(GLOB_RECURSE RESOURCES res/**)
 
 add_executable(tron ${SOURCES})
+target_precompile_headers(tron PRIVATE inc/pch.h)
 target_include_directories(tron PRIVATE
         ${CMAKE_CURRENT_LIST_DIR}/inc)
 set_target_properties(tron PROPERTIES
