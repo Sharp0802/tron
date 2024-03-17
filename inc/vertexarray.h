@@ -1,7 +1,7 @@
 #ifndef TRON_VERTEXARRAY_H
 #define TRON_VERTEXARRAY_H
 
-#include <cstdint>
+#include <vector>
 #include <GL/glew.h>
 #include <glm/glm.hpp>
 
