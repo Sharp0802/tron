@@ -1,8 +1,8 @@
 #ifndef TRON_MESH_H
 #define TRON_MESH_H
 
+#include <def.h>
 #include <memory>
-#include <vector>
 #include <unordered_map>
 #include "vertexarray.h"
 #include "vertexbuffer.h"
@@ -10,6 +10,11 @@
 
 namespace tron
 {
+    enum class Primitive
+    {
+        Cube
+    };
+
     class Mesh : public IRenderable
     {
         /*
@@ -36,6 +41,9 @@ namespace tron
         void Bind();
 
         void Draw() override;
+
+        [[nodiscard]]
+        static ptr<Mesh> GetPrimitiveObject(Primitive type);
 
         __declspec(property(get=get_VBO))
         VertexBuffer& VBO;
