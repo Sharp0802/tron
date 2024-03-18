@@ -13,10 +13,13 @@ namespace tron::sys
         int         m_height;
         std::string m_title;
         glm::mat4   m_projection;
+        float       m_fov;
 
         void UpdateFPSCounter();
 
         void UpdateProjection();
+
+        void OnScroll(double x, double y);
 
     public:
         Window(int w, int h, std::string title);

@@ -29,17 +29,27 @@ namespace tron::sys
     void Window::UpdateProjection()
     {
         m_projection = glm::perspective(
-            glm::radians(45.0f),
+            glm::radians(m_fov),
             static_cast<float>(m_width) / static_cast<float>(m_height),
             0.1f,
             100.f);
+    }
+
+    void Window::OnScroll(double x, const double y)
+    {
+        m_fov -= static_cast<float>(y);
+        if (m_fov < 1)
+            m_fov = 1;
+        if (m_fov > 75)
+            m_fov = 75;
     }
 
     Window::Window(const int w, const int h, std::string title)
         : m_window(nullptr),
           m_width(w), m_height(h),
           m_title(std::move(title)),
-          m_projection(1)
+          m_projection(1),
+          m_fov(45)
     {
         if (!glfwInit())
         {
@@ -73,6 +83,12 @@ namespace tron::sys
             auto* ctx     = static_cast<Window*>(glfwGetWindowUserPointer(window));
             ctx->m_width  = width;
             ctx->m_height = height;
+        });
+
+        glfwSetScrollCallback(m_window, [](GLFWwindow* window, const double x, const double y)
+        {
+            auto* ctx = static_cast<Window*>(glfwGetWindowUserPointer(window));
+            ctx->OnScroll(x, y);
         });
     }
 
