@@ -2,6 +2,7 @@
 #define PCH_H
 
 #define GLFW_DLL
+#define GLM_SWIZZLE
 
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
