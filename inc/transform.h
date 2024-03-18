@@ -11,13 +11,20 @@ namespace tron
 		glm::vec3 m_position;
 		glm::vec3 m_rotation;
 		glm::vec3 m_scale;
-		
+
 	public:
 		Transform();
+
+		[[nodiscard]]
+		glm::vec3 ToParent(glm::vec3 v) const;
 		
 		[[nodiscard]]
 		glm::vec3 get_Position() const;
 		void put_Position(const glm::vec3& v);
+
+		[[nodiscard]]
+		glm::vec3 get_LocalPosition() const;
+		void put_LocalPosition(const glm::vec3& v);
 
 		[[nodiscard]]
 		glm::vec3 get_Rotation() const;
@@ -33,6 +40,14 @@ namespace tron
 		/// <summary>Position vector with parent's coordinate</summary>
 		__declspec(property(get=get_Position, put=put_Position))
 		glm::vec3 Position;
+
+		/// <summary>
+		/// Position vector with local coordinate.
+		/// Because it's on local coordinate,
+		/// Getter will return always zero-initialized vector (0, 0, 0).
+		/// </summary>
+		__declspec(property(get=get_LocalPosition, put=put_LocalPosition))
+		glm::vec3 LocalPosition;
 
 		/// <summary>Euler-Rotation vector with parent's coordinate</summary>
 		__declspec(property(get=get_Rotation, put=put_Rotation))

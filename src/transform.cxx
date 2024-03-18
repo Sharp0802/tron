@@ -39,6 +39,14 @@ namespace tron
 	{
 	}
 
+	glm::vec3 Transform::ToParent(glm::vec3 v) const
+	{
+		v = rotate(v, Rotation.x, glm::vec3(1, 0, 0));
+		v = rotate(v, Rotation.y, glm::vec3(0, 1, 0));
+		v = rotate(v, Rotation.z, glm::vec3(0, 0, 1));
+		return v;
+	}
+
 	glm::vec3 Transform::get_Position() const
 	{
 		return m_position;
@@ -47,6 +55,16 @@ namespace tron
 	void Transform::put_Position(const glm::vec3& v)
 	{
 		m_position = v;
+	}
+
+	glm::vec3 Transform::get_LocalPosition() const
+	{
+		return {0, 0, 0};
+	}
+
+	void Transform::put_LocalPosition(const glm::vec3& v)
+	{
+		Position += ToParent(v);
 	}
 
 	glm::vec3 Transform::get_Rotation() const
