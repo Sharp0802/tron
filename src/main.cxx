@@ -1,3 +1,4 @@
+#include <camera.h>
 #include <iostream>
 
 #include "pch.h"
@@ -84,11 +85,10 @@ int main()
 
 		object = std::make_shared<MeshRenderer>(material, Mesh::GetPrimitiveObject(Primitive::Cube));
 		object->Transform->Scale = glm::vec3(0.3f);
-		object->Transform->Rotation = glm::vec3(glm::radians(45.f), 0, 0);
 	}
 
-	glm::mat4 view(1.0f);
-	view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
+	auto camera = std::make_shared<Camera>();
+	camera->Transform->Position = glm::vec3(0.0f, 0.0f, -3.0f);
 
 	double last = glfwGetTime();
 	while (!window.ShouldClose)
@@ -102,20 +102,38 @@ int main()
 		// OnUpdate
 		{
 			window.PollEvents();
-			if (window.GetKeyDown(GLFW_KEY_ESCAPE))
+			if (window.GetKey(GLFW_KEY_ESCAPE))
 				window.ShouldClose = true;
 
-			object->Transform->Rotation += glm::vec3(0, delta, 0);
+			if (window.GetKey(GLFW_KEY_UP))
+				camera->Transform->Rotation += glm::vec3(-delta, 0, 0);
+			if (window.GetKey(GLFW_KEY_DOWN))
+				camera->Transform->Rotation += glm::vec3(delta, 0, 0);
+			if (window.GetKey(GLFW_KEY_RIGHT))
+				camera->Transform->Rotation += glm::vec3(0, -delta, 0);
+			if (window.GetKey(GLFW_KEY_LEFT))
+				camera->Transform->Rotation += glm::vec3(0, delta, 0);
 
-			auto pos = object->Transform->Position;
-			pos.y = sinf(glfwGetTime()) * 0.3f;
-			object->Transform->Position = pos;
+			if (window.GetKey(GLFW_KEY_W))
+				camera->Transform->LocalPosition += glm::vec3(0, 0, delta);
+			if (window.GetKey(GLFW_KEY_S))
+				camera->Transform->LocalPosition += glm::vec3(0, 0, -delta);
+			if (window.GetKey(GLFW_KEY_A))
+				camera->Transform->LocalPosition += glm::vec3(delta, 0, 0);
+			if (window.GetKey(GLFW_KEY_D))
+				camera->Transform->LocalPosition += glm::vec3(-delta, 0, 0);
+			if (window.GetKey(GLFW_KEY_SPACE))
+				camera->Transform->LocalPosition += glm::vec3(0, delta, 0);
+			if (window.GetKey(GLFW_KEY_LEFT_SHIFT))
+				camera->Transform->LocalPosition += glm::vec3(0, -delta, 0);
+
+			object->Transform->Rotation += glm::vec3(0, delta, 0);
 		}
 
 		// OnDraw
 		window.Draw();
 		{
-			object->Bind(window.Projection, view);
+			object->Bind(window.Projection, camera->Matrix);
 			object->Draw();
 		}
 	}
