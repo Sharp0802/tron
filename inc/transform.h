@@ -29,16 +29,20 @@ namespace tron
 
 		[[nodiscard]]
 		glm::mat4 get_Matrix() const;
-		
+
+		/// <summary>Position vector with parent's coordinate</summary>
 		__declspec(property(get=get_Position, put=put_Position))
 		glm::vec3 Position;
 
+		/// <summary>Euler-Rotation vector with parent's coordinate</summary>
 		__declspec(property(get=get_Rotation, put=put_Rotation))
 		glm::vec3 Rotation;
 
+		/// <summary>Scale vector with parent's coordinate</summary>
 		__declspec(property(get=get_Scale, put=put_Scale))
 		glm::vec3 Scale;
 
+		/// <summary>Matrix for model</summary>
 		__declspec(property(get=get_Matrix))
 		glm::mat4 Matrix;
 	};
