@@ -74,13 +74,6 @@ namespace tron::sys
             ctx->m_width  = width;
             ctx->m_height = height;
         });
-
-        glfwSetKeyCallback(m_window, [](GLFWwindow* window, const int key, int, int action, int)
-        {
-            auto* ctx = static_cast<Window*>(glfwGetWindowUserPointer(window));
-            if (action == GLFW_REPEAT)
-                ctx->m_repeatedKeys.push_back(key);
-        });
     }
 
     void Window::Bind()
@@ -103,18 +96,12 @@ namespace tron::sys
 
     void Window::PollEvents()
     {
-        m_repeatedKeys.clear();
         glfwPollEvents();
-    }
-
-    bool Window::GetKeyDown(const int key) const
-    {
-        return glfwGetKey(m_window, key) == GLFW_PRESS;
     }
 
     bool Window::GetKey(const int key) const
     {
-        return std::ranges::contains(m_repeatedKeys, key);
+        return glfwGetKey(m_window, key) == GLFW_PRESS;
     }
 
     std::string Window::get_Title() const
@@ -122,7 +109,7 @@ namespace tron::sys
         return m_title;
     }
 
-    void Window::set_Title(std::string title)
+    void Window::put_Title(std::string title)
     {
         m_title = std::move(title);
     }

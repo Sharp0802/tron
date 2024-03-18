@@ -14,8 +14,6 @@ namespace tron::sys
         std::string m_title;
         glm::mat4   m_projection;
 
-        std::vector<int> m_repeatedKeys;
-
         void UpdateFPSCounter();
 
         void UpdateProjection();
@@ -30,18 +28,12 @@ namespace tron::sys
         void PollEvents();
 
         [[nodiscard]]
-        bool GetKeyDown(int key) const;
-
-        [[nodiscard]]
         bool GetKey(int key) const;
-
-        [[nodiscard]]
-        bool GetKeyUp(int key) const;
 
         [[nodiscard]]
         std::string get_Title() const;
 
-        void set_Title(std::string title);
+        void put_Title(std::string title);
 
         [[nodiscard]]
         glm::mat4 get_Projection() const;
