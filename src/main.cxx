@@ -1,24 +1,15 @@
-#include <camera.h>
-#include <iostream>
-
 #include "pch.h"
 
 #include "log.h"
 #include "mesh.h"
 #include "program.h"
 #include "texture2d.h"
-#include "vertexarray.h"
-#include "vertexbuffer.h"
-
 #include "def.h"
 #include "material.h"
 #include "meshrenderer.h"
 #include "transform.h"
 #include "sys/window.h"
-
-#if _WIN32
-#include <windows.h>
-#endif
+#include "camera.h"
 
 #define TITLE "трон"
 
@@ -87,7 +78,8 @@ int main()
 		object->Transform->Scale = glm::vec3(0.3f);
 	}
 
-	auto camera = std::make_shared<Camera>();
+	const auto camera = std::make_shared<Camera>();
+
 	camera->Transform->Position = glm::vec3(0.0f, 0.0f, -3.0f);
 
 	window.Camera = camera;
