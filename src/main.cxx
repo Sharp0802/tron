@@ -90,6 +90,8 @@ int main()
 	auto camera = std::make_shared<Camera>();
 	camera->Transform->Position = glm::vec3(0.0f, 0.0f, -3.0f);
 
+	window.Camera = camera;
+
 	double last = glfwGetTime();
 	while (!window.ShouldClose)
 	{
@@ -105,15 +107,6 @@ int main()
 			if (window.GetKey(GLFW_KEY_ESCAPE))
 				window.ShouldClose = true;
 
-			if (window.GetKey(GLFW_KEY_UP))
-				camera->Transform->Rotation += glm::vec3(-delta, 0, 0);
-			if (window.GetKey(GLFW_KEY_DOWN))
-				camera->Transform->Rotation += glm::vec3(delta, 0, 0);
-			if (window.GetKey(GLFW_KEY_RIGHT))
-				camera->Transform->Rotation += glm::vec3(0, -delta, 0);
-			if (window.GetKey(GLFW_KEY_LEFT))
-				camera->Transform->Rotation += glm::vec3(0, delta, 0);
-
 			if (window.GetKey(GLFW_KEY_W))
 				camera->Transform->LocalPosition += glm::vec3(0, 0, delta);
 			if (window.GetKey(GLFW_KEY_S))
@@ -122,12 +115,11 @@ int main()
 				camera->Transform->LocalPosition += glm::vec3(delta, 0, 0);
 			if (window.GetKey(GLFW_KEY_D))
 				camera->Transform->LocalPosition += glm::vec3(-delta, 0, 0);
-			if (window.GetKey(GLFW_KEY_SPACE))
-				camera->Transform->LocalPosition += glm::vec3(0, delta, 0);
-			if (window.GetKey(GLFW_KEY_LEFT_SHIFT))
-				camera->Transform->LocalPosition += glm::vec3(0, -delta, 0);
 
-			object->Transform->Rotation += glm::vec3(0, delta, 0);
+			if (window.GetKey(GLFW_KEY_SPACE))
+				camera->Transform->Position += glm::vec3(0, delta, 0);
+			if (window.GetKey(GLFW_KEY_LEFT_SHIFT))
+				camera->Transform->Position += glm::vec3(0, -delta, 0);
 		}
 
 		// OnDraw

@@ -2,6 +2,8 @@
 #define WINDOW_H
 
 #include "pch.h"
+#include "def.h"
+#include "camera.h"
 #include "irenderable.h"
 
 namespace tron::sys
@@ -14,12 +16,15 @@ namespace tron::sys
         std::string m_title;
         glm::mat4   m_projection;
         float       m_fov;
+        ptr<Camera> m_camera;
 
         void UpdateFPSCounter();
 
         void UpdateProjection();
 
         void OnScroll(double x, double y);
+
+        void OnMouseMove(double x, double y);
 
     public:
         Window(int w, int h, std::string title);
@@ -46,6 +51,11 @@ namespace tron::sys
 
         void put_ShouldClose(bool value) const;
 
+        [[nodiscard]]
+        ptr<Camera> get_Camera() const;
+
+        void put_Camera(ptr<Camera> value);
+
         __declspec(property(get=get_Title, put=put_Title))
         std::string Title;
 
@@ -54,6 +64,9 @@ namespace tron::sys
 
         __declspec(property(get=get_ShouldClose, put=put_ShouldClose))
         bool ShouldClose;
+
+        __declspec(property(get=get_Camera, put=put_Camera))
+        ptr<Camera> Camera;
     };
 }
 

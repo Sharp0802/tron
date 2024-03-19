@@ -1,3 +1,5 @@
+#include <utility>
+
 #include "pch.h"
 #include "sys/window.h"
 #include "log.h"
@@ -44,12 +46,40 @@ namespace tron::sys
             m_fov = 75;
     }
 
+    void Window::OnMouseMove(double x, double y)
+    {
+        static double lastX, lastY;
+        static bool first = true;
+
+        if (first)
+        {
+            lastX = 0;
+            lastY = 0;
+            first = false;
+        }
+
+        double xoffset = x - lastX;
+        double yoffset = lastY - y; // reversed since y-coordinates range from bottom to top
+        lastX = x;
+        lastY = y;
+
+        constexpr float sensitivity = 0.001f;
+        xoffset *= sensitivity;
+        yoffset *= sensitivity;
+
+        if (Camera)
+            Camera->Transform->Rotation += glm::vec3(yoffset, xoffset, 0);
+
+        //glfwSetCursorPos(m_window, m_width / 2., m_height / 2.);
+    }
+
     Window::Window(const int w, const int h, std::string title)
         : m_window(nullptr),
           m_width(w), m_height(h),
           m_title(std::move(title)),
           m_projection(1),
-          m_fov(45)
+          m_fov(45),
+          m_camera(nullptr)
     {
         if (!glfwInit())
         {
@@ -90,6 +120,14 @@ namespace tron::sys
             auto* ctx = static_cast<Window*>(glfwGetWindowUserPointer(window));
             ctx->OnScroll(x, y);
         });
+
+        glfwSetCursorPosCallback(m_window, [](GLFWwindow* window, const double x, const double y)
+        {
+            auto* ctx = static_cast<Window*>(glfwGetWindowUserPointer(window));
+            ctx->OnMouseMove(x, y);
+        });
+
+        glfwSetInputMode(m_window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     }
 
     void Window::Bind()
@@ -143,5 +181,15 @@ namespace tron::sys
     void Window::put_ShouldClose(const bool value) const
     {
         glfwSetWindowShouldClose(m_window, value);
+    }
+
+    ptr<Camera> Window::get_Camera() const
+    {
+        return m_camera;
+    }
+
+    void Window::put_Camera(ptr<tron::Camera> value)
+    {
+        m_camera = std::move(value);
     }
 }
