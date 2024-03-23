@@ -15,7 +15,11 @@ A simple game with OpenGL 4.5, written in C++26.
 
 ### Building
 
-- `clang`
+> [!WARNING]
+> Building in Windows is not supported temporarily.
+> (Code generator is broken on Windows)
+
+- `clang`, `libclang`
   - Tested on `clang-17`, `clang-18`
 - CMake 3.25 or above
 - Internet connection (project automatically downloads dependencies)
