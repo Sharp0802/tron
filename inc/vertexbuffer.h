@@ -67,11 +67,11 @@ namespace tron
 		using VertexBuffer::Usage;
 		using VertexBuffer::BufferSubData;
 
-		void Buffer(std::vector<uint8_t> buffer);
+		void Buffer(std::initializer_list<uint8_t> buffer);
 
-		void Buffer(std::vector<uint16_t> buffer);
+		void Buffer(std::initializer_list<uint16_t> buffer);
 
-		void Buffer(std::vector<uint32_t> buffer);
+		void Buffer(std::initializer_list<uint32_t> buffer);
 
 		[[nodiscard]]
 		GLenum Type() const;

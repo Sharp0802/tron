@@ -107,34 +107,34 @@ namespace tron
 	{
 	}
 
-	void IndexBuffer::Buffer(std::vector<uint8_t> buffer)
+	void IndexBuffer::Buffer(std::initializer_list<uint8_t> buffer)
 	{
 		ASSERT_ALIVE;
 
 		VertexBuffer::Buffer(
-				(void*)buffer.data(),
+				const_cast<uint8_t*>(buffer.begin()),
 				buffer.size() * sizeof(uint8_t));
 		m_type = GL_UNSIGNED_BYTE;
 		m_size = buffer.size();
 	}
 
-	void IndexBuffer::Buffer(std::vector<uint16_t> buffer)
+	void IndexBuffer::Buffer(std::initializer_list<uint16_t> buffer)
 	{
 		ASSERT_ALIVE;
 
 		VertexBuffer::Buffer(
-				(void*)buffer.data(),
+				const_cast<uint16_t*>(buffer.begin()),
 				buffer.size() * sizeof(uint16_t));
 		m_type = GL_UNSIGNED_SHORT;
 		m_size = buffer.size();
 	}
 
-	void IndexBuffer::Buffer(std::vector<uint32_t> buffer)
+	void IndexBuffer::Buffer(std::initializer_list<uint32_t> buffer)
 	{
 		ASSERT_ALIVE;
 
 		VertexBuffer::Buffer(
-				(void*)buffer.data(),
+				const_cast<uint32_t*>(buffer.begin()),
 				buffer.size() * sizeof(uint32_t));
 		m_type = GL_UNSIGNED_INT;
 		m_size = buffer.size();

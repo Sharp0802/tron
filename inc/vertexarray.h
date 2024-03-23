@@ -5,24 +5,24 @@
 
 namespace tron
 {
-	template<typename T>
-	struct VertexAttribute;
+    template<typename T>
+    struct VertexAttribute;
 
-	template<>
-	struct VertexAttribute<int>
-	{
-		constexpr static GLenum Type  = GL_INT;
-		constexpr static GLint  Size  = sizeof(int);
-		constexpr static GLint  Count = 1;
-	};
+    template<>
+    struct VertexAttribute<int>
+    {
+        constexpr static GLenum Type  = GL_INT;
+        constexpr static GLint  Size  = sizeof(int);
+        constexpr static GLint  Count = 1;
+    };
 
-	template<>
-	struct VertexAttribute<float>
-	{
-		constexpr static GLenum Type  = GL_FLOAT;
-		constexpr static GLint  Size  = sizeof(float);
-		constexpr static GLint  Count = 1;
-	};
+    template<>
+    struct VertexAttribute<float>
+    {
+        constexpr static GLenum Type  = GL_FLOAT;
+        constexpr static GLint  Size  = sizeof(float);
+        constexpr static GLint  Count = 1;
+    };
 
 #ifndef VERTEX_ATTRIBUTE_INFO_FROM_VEC_N
 #define VERTEX_ATTRIBUTE_INFO_FROM_VEC_N(n)                      \
@@ -46,49 +46,54 @@ namespace tron
 		}
 #endif
 
-	VERTEX_ATTRIBUTE_INFO_FROM_VEC_N(1);
-	VERTEX_ATTRIBUTE_INFO_FROM_VEC_N(2);
-	VERTEX_ATTRIBUTE_INFO_FROM_VEC_N(3);
-	VERTEX_ATTRIBUTE_INFO_FROM_VEC_N(4);
+    VERTEX_ATTRIBUTE_INFO_FROM_VEC_N(1);
 
-	VERTEX_ATTRIBUTE_INFO_FROM_MAT_N(2);
-	VERTEX_ATTRIBUTE_INFO_FROM_MAT_N(3);
-	VERTEX_ATTRIBUTE_INFO_FROM_MAT_N(4);
+    VERTEX_ATTRIBUTE_INFO_FROM_VEC_N(2);
 
-	struct VertexAttributeInfo
-	{
-		GLenum Type;
-		GLint  Size;
-		GLint  Count;
+    VERTEX_ATTRIBUTE_INFO_FROM_VEC_N(3);
 
-		template<typename T>
-		constexpr static VertexAttributeInfo Create()
-		{
-			using A = VertexAttribute<T>;
-			return { A::Type, A::Size, A::Count };
-		}
-	};
+    VERTEX_ATTRIBUTE_INFO_FROM_VEC_N(4);
 
-	class VertexArray
-	{
-		using Attributes = std::vector<VertexAttributeInfo>;
+    VERTEX_ATTRIBUTE_INFO_FROM_MAT_N(2);
 
-		const Attributes m_attributes;
-		const GLuint     m_handle;
+    VERTEX_ATTRIBUTE_INFO_FROM_MAT_N(3);
 
-		bool m_disposed;
+    VERTEX_ATTRIBUTE_INFO_FROM_MAT_N(4);
 
-	public:
-		VertexArray& operator=(const VertexArray&) = delete;
-		VertexArray(const VertexArray&) = delete;
-		VertexArray() = delete;
+    struct VertexAttributeInfo
+    {
+        GLenum Type;
+        GLint  Size;
+        GLint  Count;
 
-		VertexArray(std::initializer_list<VertexAttributeInfo> attributes);
+        template<typename T>
+        constexpr static VertexAttributeInfo Create()
+        {
+            using A = VertexAttribute<T>;
+            return { A::Type, A::Size, A::Count };
+        }
+    };
 
-		~VertexArray();
+    class VertexArray
+    {
+        const std::vector<VertexAttributeInfo> m_attributes;
+        const GLuint                           m_handle;
 
-		void Bind();
-	};
+        bool m_disposed;
+
+    public:
+        VertexArray& operator=(const VertexArray&) = delete;
+
+        VertexArray(const VertexArray&) = delete;
+
+        VertexArray() = delete;
+
+        VertexArray(std::initializer_list<VertexAttributeInfo> attributes);
+
+        ~VertexArray();
+
+        void Bind();
+    };
 }
 
 #endif //TRON_VERTEXARRAY_H

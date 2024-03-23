@@ -81,7 +81,7 @@ namespace tron
 #define RECT_P(p, i) (p+(i*4))
 #define RECT(i) RECT_P(0,i),RECT_P(1,i),RECT_P(2,i),RECT_P(0,i),RECT_P(2,i),RECT_P(3,i)
 
-            std::vector<uint16_t> indices = {
+            std::initializer_list<uint16_t> indices = {
                 RECT(0), RECT(1), RECT(2), RECT(3), RECT(4), RECT(5),
             };
 
