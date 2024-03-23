@@ -7,6 +7,8 @@
 #define ASSERT(a)
 #endif
 
+#include "pch.h"
+
 namespace tron
 {
     template<typename T>

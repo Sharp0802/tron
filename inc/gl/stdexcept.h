@@ -1,6 +1,8 @@
 #ifndef STDEXCEPT_H
 #define STDEXCEPT_H
 
+#include "pch.h"
+
 struct gl_category final : std::error_category
 {
 	[[nodiscard]]
