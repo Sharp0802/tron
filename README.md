@@ -28,3 +28,13 @@ A simple game with OpenGL 4.5, written in C++26.
 - \[On Windows\]
   - Powershell (You don't have to install modern powershell; Tested on 5.1)
   - OpenGL Driver; see [docs](https://www.khronos.org/opengl/wiki/Getting_Started#Windows)
+
+## Thanks to (Dependencies)
+
+- CMake (https://cmake.org/)
+- Clang, libclang (https://clang.llvm.org/)
+- OpenGL (https://www.opengl.org/)
+- GLEW (https://glew.sourceforge.net/)
+- GLFW (https://www.glfw.org/)
+- STB (https://github.com/nothings/stb)
+- .NET (https://github.com/dotnet)
