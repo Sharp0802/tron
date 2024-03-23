@@ -20,7 +20,7 @@ A simple game with OpenGL 4.5, written in C++26.
 > (Code generator is broken on Windows)
 
 - `clang`, `libclang`
-  - Tested on `clang-17`, `clang-18`
+  - Tested on `clang 18.1.3`
 - CMake 3.25 or above
 - Internet connection (project automatically downloads dependencies)
 - \[On Linux\]
