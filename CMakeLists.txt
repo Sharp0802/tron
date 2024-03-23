@@ -2,10 +2,10 @@ cmake_minimum_required(VERSION 3.25)
 project(tron LANGUAGES CXX)
 
 
+include(${CMAKE_CURRENT_LIST_DIR}/cg/CMakeLists.txt)
+
 set(CMAKE_C_COMPILER clang)
 set(CMAKE_CXX_COMPILER clang++)
-
-
 set(CMAKE_CXX_STANDARD 26)
 
 set(BINARY_DIR ${CMAKE_CURRENT_LIST_DIR}/bin/${CMAKE_BUILD_TYPE})
@@ -22,7 +22,7 @@ ENDIF()
 add_compile_options(-Wno-gnu-string-literal-operator-template -fdeclspec -fms-extensions)
 
 ###################################################
-# Platform Dependants                             #
+# GLFW/GLEW Installation                          #
 ###################################################
 IF (WIN32)
     execute_process(
@@ -69,6 +69,9 @@ ELSE ()
             GLEW::GLEW)
 ENDIF ()
 
+###################################################
+# Extra Headers Installation                      #
+###################################################
 file(
         DOWNLOAD https://raw.githubusercontent.com/nothings/stb/master/stb_image.h
         ${CMAKE_CACHEFILE_DIR}/.tmp/inc/stb_image.h
@@ -110,3 +113,7 @@ add_custom_command(
             ${BINARY_DIR}/res
         DEPENDS ${RESOURCES}
 )
+
+###################################################
+# CppSharp Installation                           #
+###################################################
