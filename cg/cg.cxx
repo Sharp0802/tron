@@ -43,12 +43,15 @@ std::string TypeToString(const CXType& type)
 
     // Handle reference/pointers
     auto refScopeCount = 0;
-    for (auto& ch: str)
+    if (!str.contains("void *") && !str.contains("void*"))
     {
-        if (ch != '*' && ch != '&')
-            continue;
-        refScopeCount++;
-        ch = ' ';
+        for (auto& ch: str)
+        {
+            if (ch != '*' && ch != '&')
+                continue;
+            refScopeCount++;
+            ch = ' ';
+        }
     }
 
     // Handle auto poitners
