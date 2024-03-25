@@ -16,6 +16,9 @@ namespace tron
     public:
         Material(ptr<Program> program, ptr<Texture> texture);
 
+        // Interoperablity with tron-cg
+        ~Material() = default;
+
         ptr<Program> get_Program();
         ptr<Texture> get_Texture();
         

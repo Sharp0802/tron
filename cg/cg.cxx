@@ -59,23 +59,6 @@ std::string TypeToString(const CXType& type)
     for (size_t pos; (pos = str.find("std::initializer_list<")) != std::string::npos;)
         str.replace(pos, 22, "InitializerList<");
 
-    // Handle signed primitives
-    while (Replace(str, "int8_t", "sbyte"))
-    {
-    }
-    while (Replace(str, "int16_t", "short"))
-    {
-    }
-    while (Replace(str, "int32_t", "int"))
-    {
-    }
-    while (Replace(str, "int64_t", "long"))
-    {
-    }
-    while (Replace(str, "ssize_t", "nint"))
-    {
-    }
-
     // Handle unsigned primitives
     while (Replace(str, "uint8_t", "byte"))
     {
@@ -90,6 +73,23 @@ std::string TypeToString(const CXType& type)
     {
     }
     while (Replace(str, "size_t", "nuint"))
+    {
+    }
+
+    // Handle signed primitives
+    while (Replace(str, "int8_t", "sbyte"))
+    {
+    }
+    while (Replace(str, "int16_t", "short"))
+    {
+    }
+    while (Replace(str, "int32_t", "int"))
+    {
+    }
+    while (Replace(str, "int64_t", "long"))
+    {
+    }
+    while (Replace(str, "ssize_t", "nint"))
     {
     }
 
@@ -159,10 +159,10 @@ struct FunctionEntry
         sprintf(buffer, R"(
 namespace Tron.CodeGen
 {
-    internal partial struct CXX__%s
+    internal partial struct %s
     {
         [DllImport("tron", ExactSpelling=true, EntryPoint="%s")]
-        internal extern %s %s(%s);
+        internal static extern unsafe %s %s(%s);
     }
 }
 )", Class.data(), Mangling.data(), Return.data(), name.data(), params.str().data());
@@ -177,7 +177,7 @@ struct TypeEntry
     std::int64_t Size = -1;
 
     [[nodiscard]]
-    std::string ToCSDef() const
+    std::string ToCSDef(std::map<std::string, FunctionEntry> fns) const
     {
         __thread static char buffer[65535];
 
@@ -186,12 +186,39 @@ namespace Tron.CodeGen
 {
     [Serializable]
     [StructLayout(LayoutKind.Sequential)]
-    internal partial struct CXX__%s
+    internal partial struct %s
     {
         private unsafe fixed byte _data[%lld];
     }
 }
 )", Name.data(), Size);
+
+        auto hasDtor = false;
+        for (const auto& fn: std::views::values(fns))
+        {
+            if (fn.Class != Name || fn.Name[0] != '~')
+                continue;
+            hasDtor = true;
+            break;
+        }
+
+        if (hasDtor)
+        {
+            sprintf(buffer, R"(
+namespace Tron.CodeGen
+{
+    [Serializable]
+    [StructLayout(LayoutKind.Sequential)]
+    internal partial struct %s : IDisposable
+    {
+        public void Dispose()
+        {
+            __dtor__(ref this);
+        }
+    }
+}
+)", Name.data());
+        }
 
         return buffer;
     }
@@ -306,10 +333,11 @@ int main()
 using System;
 using System.Runtime.InteropServices;
 using CsInterop;
+using GlmSharp;
 )";
 
     for (const auto& entry: std::views::values(cg.Functions))
         out << entry.ToCSDef();
     for (const auto& entry: std::views::values(cg.Types))
-        out << entry.ToCSDef();
+        out << entry.ToCSDef(cg.Functions);
 }

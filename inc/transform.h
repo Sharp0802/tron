@@ -15,6 +15,9 @@ namespace tron
 	public:
 		Transform();
 
+		// Interoperablity with tron-cg
+		~Transform() = default;
+
 		[[nodiscard]]
 		glm::vec3 ToParent(glm::vec3 v) const;
 		

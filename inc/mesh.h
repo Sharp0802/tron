@@ -31,6 +31,9 @@ namespace tron
             std::initializer_list<VertexAttributeInfo> attributes,
             VertexBufferUsage usage = VertexBufferUsage::DEFAULT_DRAW);
 
+        // Interoperablity with tron-cg
+        ~Mesh() override = default;
+
         [[nodiscard]]
         VertexBuffer& get_VBO();
 
