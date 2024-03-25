@@ -96,6 +96,14 @@ std::string TypeToString(const CXType& type)
     {
     }
 
+    // Handle GL types
+    while (Replace(str, "GLuint", "uint"))
+    {
+    }
+    while (Replace(str, "GLint", "int"))
+    {
+    }
+
     // Handle consts
     auto constScopeCount = 0;
     for (size_t pos; (pos = str.find("const")) != std::string::npos;)
@@ -162,7 +170,7 @@ struct FunctionEntry
         sprintf(buffer, R"(
 namespace Tron.CodeGen
 {
-    internal partial struct %s
+    public partial struct %s
     {
         [DllImport("tron", ExactSpelling=true, EntryPoint="%s")]
         internal static extern unsafe %s %s(%s);
@@ -189,7 +197,7 @@ namespace Tron.CodeGen
 {
     [Serializable]
     [StructLayout(LayoutKind.Sequential)]
-    internal partial struct %s
+    public partial struct %s
     {
         private unsafe fixed byte _data[%lld];
     }
@@ -212,7 +220,7 @@ namespace Tron.CodeGen
 {
     [Serializable]
     [StructLayout(LayoutKind.Sequential)]
-    internal partial struct %s : IDisposable
+    public partial struct %s : IDisposable
     {
         public void Dispose()
         {
@@ -279,7 +287,7 @@ int main()
                 kind != CXCursor_ConversionFunction)
                 return CXChildVisit_Recurse;
             if (clang_CXXMethod_isDeleted(c))
-                return CXChildVisit_Continue;
+                return CXChildVisit_Recurse;
 
             // Must be in namespace
             const CXCursor parent = clang_getCursorSemanticParent(c);
@@ -287,13 +295,13 @@ int main()
                                     ? clang_getCursorSemanticParent(parent)
                                     : parent;
             if (clang_getCursorKind(ns) != CXCursor_Namespace)
-                return CXChildVisit_Continue;
+                return CXChildVisit_Recurse;
 
             // Namespace name must contains 'tron'
             const auto nsStr = clang_getCursorDisplayName(ns);
             // ReSharper disable once CppStringLiteralToCharPointerConversion
             if (memcmp(clang_getCString(nsStr), "tron", 4) != 0)
-                return CXChildVisit_Continue;
+                return CXChildVisit_Recurse;
             clang_disposeString(nsStr);
 
 
@@ -326,7 +334,7 @@ int main()
             // Commit
             ctx.Functions[entry.Mangling] = entry;
 
-            return CXChildVisit_Continue;
+            return CXChildVisit_Recurse;
         }, &cg);
     }
 
