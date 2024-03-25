@@ -60,8 +60,9 @@ namespace tron
 
     VERTEX_ATTRIBUTE_INFO_FROM_MAT_N(4);
 
-    struct VertexAttributeInfo
+    class VertexAttributeInfo
     {
+    public:
         GLenum Type;
         GLint  Size;
         GLint  Count;
