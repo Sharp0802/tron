@@ -1,11 +1,23 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tron.CodeGen", "Tron.CodeGen\Tron.CodeGen.csproj", "{A09EAE36-B349-40F7-872E-19EDF6CFB5A3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tron", "Tron\Tron.csproj", "{4465A1FC-F2B7-4765-AE0D-E19113003A0F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A09EAE36-B349-40F7-872E-19EDF6CFB5A3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A09EAE36-B349-40F7-872E-19EDF6CFB5A3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A09EAE36-B349-40F7-872E-19EDF6CFB5A3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A09EAE36-B349-40F7-872E-19EDF6CFB5A3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4465A1FC-F2B7-4765-AE0D-E19113003A0F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4465A1FC-F2B7-4765-AE0D-E19113003A0F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4465A1FC-F2B7-4765-AE0D-E19113003A0F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4465A1FC-F2B7-4765-AE0D-E19113003A0F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
