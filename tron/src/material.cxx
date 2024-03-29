@@ -25,3 +25,15 @@ namespace tron
 		m_texture->Bind();
 	}
 }
+
+namespace tron
+{
+	EXPORT_CTOR(Material, ptr<Program> program, ptr<Texture> texture)
+	{
+		return std::make_shared<Material>(program, texture);
+	}
+
+	EXPORT_RDT(Material, ptr<Program>, get_Program);
+	EXPORT_RDT(Material, ptr<Texture>, get_Texture);
+	EXPORT_RDT_void(Material, Bind);
+}

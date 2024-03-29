@@ -1,5 +1,3 @@
-#include <utility>
-
 #include "pch.h"
 #include "sys/window.h"
 #include "log.h"
@@ -28,22 +26,8 @@ namespace tron::sys
         cFPS++;
     }
 
-    void Window::UpdateProjection()
-    {
-        m_projection = glm::perspective(
-            glm::radians(m_fov),
-            static_cast<float>(m_width) / static_cast<float>(m_height),
-            0.1f,
-            100.f);
-    }
-
     void Window::OnScroll(double x, const double y)
     {
-        m_fov -= static_cast<float>(y);
-        if (m_fov < 1)
-            m_fov = 1;
-        if (m_fov > 75)
-            m_fov = 75;
     }
 
     void Window::OnMouseMove(double x, double y)
@@ -76,10 +60,7 @@ namespace tron::sys
     Window::Window(const int w, const int h, std::string title)
         : m_window(nullptr),
           m_width(w), m_height(h),
-          m_title(std::move(title)),
-          m_projection(1),
-          m_fov(45),
-          m_camera(nullptr)
+          m_title(std::move(title))
     {
         if (!glfwInit())
         {
@@ -140,7 +121,6 @@ namespace tron::sys
         glfwSwapBuffers(m_window);
 
         UpdateFPSCounter();
-        UpdateProjection();
 
         glViewport(0, 0, m_width, m_height);
 
@@ -168,11 +148,6 @@ namespace tron::sys
         m_title = std::move(title);
     }
 
-    glm::mat4 Window::get_Projection() const
-    {
-        return m_projection;
-    }
-
     bool Window::get_ShouldClose() const
     {
         return glfwWindowShouldClose(m_window);
@@ -181,15 +156,5 @@ namespace tron::sys
     void Window::put_ShouldClose(const bool value) const
     {
         glfwSetWindowShouldClose(m_window, value);
-    }
-
-    ptr<Camera> Window::get_Camera() const
-    {
-        return m_camera;
-    }
-
-    void Window::put_Camera(ptr<tron::Camera> value)
-    {
-        m_camera = std::move(value);
     }
 }

@@ -27,8 +27,10 @@
 #include <thread>
 #include <unordered_map>
 #include <utility>
-#include <unordered_map>
+#include <map>
 #include <vector>
+#include <utility>
+#include <ranges>
 
 #if _WIN32
 #include <windows.h>

@@ -14,13 +14,8 @@ namespace tron::sys
         int         m_width;
         int         m_height;
         std::string m_title;
-        glm::mat4   m_projection;
-        float       m_fov;
-        ptr<Camera> m_camera;
 
         void UpdateFPSCounter();
-
-        void UpdateProjection();
 
         void OnScroll(double x, double y);
 
@@ -44,9 +39,6 @@ namespace tron::sys
         void put_Title(std::string title);
 
         [[nodiscard]]
-        glm::mat4 get_Projection() const;
-
-        [[nodiscard]]
         bool get_ShouldClose() const;
 
         void put_ShouldClose(bool value) const;
@@ -58,9 +50,6 @@ namespace tron::sys
 
         __declspec(property(get=get_Title, put=put_Title))
         std::string Title;
-
-        __declspec(property(get=get_Projection))
-        glm::mat4 Projection;
 
         __declspec(property(get=get_ShouldClose, put=put_ShouldClose))
         bool ShouldClose;

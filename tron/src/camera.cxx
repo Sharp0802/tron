@@ -29,3 +29,14 @@ namespace tron
         return lookAt(origin, origin + forward, up);
     }
 }
+
+namespace tron
+{
+    EXPORT_CTOR(Camera)
+    {
+        return std::make_shared<Camera>();
+    }
+
+    EXPORT_RDT(Camera, ptr<Transform>, get_Transform);
+    EXPORT_RDT(Camera, glm::mat4, get_Matrix);
+}
