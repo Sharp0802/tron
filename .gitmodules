@@ -2,3 +2,6 @@
 	path = dep/glm
 	url = https://github.com/g-truc/glm
 	branch = master
+[submodule "dep/dhost"]
+	path = dep/dhost
+	url = https://github.com/Sharp0802/dhost
