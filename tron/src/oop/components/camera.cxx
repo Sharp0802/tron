@@ -14,7 +14,7 @@ namespace tron::oop::components
     Camera::Camera(Actor* parent): Component(GetType<Camera>(), parent, {
         .Updated = [](CObject* object, float)
         {
-            if (!sys::Window::Instanced)
+            if (!sys::Window::Instanced())
                 return;
 
             auto* camera = dynamic_cast<Camera*>(object);

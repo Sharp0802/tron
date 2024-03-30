@@ -146,7 +146,7 @@ namespace tron::oop::sys
         glfwSetWindowShouldClose(m_window, value);
     }
 
-    getter_decl_(Window, Instanced)
+    bool Window::Instanced()
     {
         return s_window != nullptr;
     }

@@ -34,7 +34,7 @@ namespace tron::oop::sys
         mutable_(const char*, Title);
         mutable_(bool, ShouldClose);
 
-        static_immutable_(bool, Instanced);
+        static bool Instanced();
 
         static Window& Instance();
     };
