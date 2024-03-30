@@ -2,11 +2,11 @@
 #define TRANSFORM_H
 
 #include "oop/oop.h"
-#include "oop/cobject.h"
+#include "oop/component.h"
 
 namespace tron::oop::components
 {
-    class Transform final : public CObject
+    class Transform final : public Component
     {
         Transform*              m_parent;
         std::vector<Transform*> m_children;
@@ -16,7 +16,7 @@ namespace tron::oop::components
         glm::vec3 m_scale;
 
     public:
-        explicit Transform(Transform* parent);
+        explicit Transform(Actor* actor, Transform* parent);
 
         [[nodiscard]]
         glm::vec3 ToParent(glm::vec3 v) const;
