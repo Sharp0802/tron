@@ -6,7 +6,7 @@
 
 namespace fs = std::filesystem;
 
-namespace tron
+namespace tron::oop::specials
 {
     Program::Program()
         : m_handle(glCreateProgram()),

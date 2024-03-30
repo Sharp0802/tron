@@ -1,6 +1,6 @@
 #include "oop/specials/material.h"
 
-namespace tron
+namespace tron::oop::specials
 {
     void Material::Bind()
     {

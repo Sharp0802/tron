@@ -5,7 +5,7 @@
 #include "program.h"
 #include "texture.h"
 
-namespace tron
+namespace tron::oop::specials
 {
     class Material
     {

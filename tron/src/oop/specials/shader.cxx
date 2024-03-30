@@ -26,7 +26,7 @@ namespace
     }
 }
 
-namespace tron
+namespace tron::oop::specials
 {
     Shader::Shader(const char* name): Shader(std::string(name))
     {

@@ -33,7 +33,7 @@ namespace
     }
 }
 
-namespace tron
+namespace tron::oop::specials
 {
     Texture2D::Texture2D(
         const char* img,

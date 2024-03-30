@@ -4,7 +4,7 @@
 #include "pch.h"
 #include "oop/specials/texture.h"
 
-namespace tron
+namespace tron::oop::specials
 {
     class Texture2D final : public Texture
     {

@@ -3,7 +3,7 @@
 
 #include "oop/oop.h"
 
-namespace tron
+namespace tron::oop::specials
 {
     namespace shader_detail
     {

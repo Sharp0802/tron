@@ -4,7 +4,7 @@
 #include "pch.h"
 #include "shader.h"
 
-namespace tron
+namespace tron::oop::specials
 {
     class Program
     {
