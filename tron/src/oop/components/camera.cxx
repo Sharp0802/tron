@@ -7,6 +7,8 @@
 
 namespace tron::oop::components
 {
+    static Camera* m_current;
+
     class Transform;
 
     Camera::Camera(Actor* parent): Component(GetType<Camera>(), parent, {
@@ -35,6 +37,11 @@ namespace tron::oop::components
         }
     })
     {
+    }
+
+    void Camera::Bind()
+    {
+        m_current = this;
     }
 
     getter_decl_(Camera, Near)
@@ -75,5 +82,10 @@ namespace tron::oop::components
     getter_decl_(Camera, View)
     {
         return m_view;
+    }
+
+    Camera& Camera::Current()
+    {
+        return *m_current;
     }
 }

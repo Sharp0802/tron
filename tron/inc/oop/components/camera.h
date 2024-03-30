@@ -18,11 +18,15 @@ namespace tron::oop::components
     public:
         explicit Camera(Actor* parent);
 
+        void Bind();
+
         mutable_(float, Near);
         mutable_(float, Far);
         mutable_(float, FoV);
         immutable_(glm::mat4, Projection);
         immutable_(glm::mat4, View);
+
+        static Camera& Current();
     };
 }
 
