@@ -8,6 +8,8 @@ namespace tron::oop::sys
 {
     class Window : public CObject
     {
+        friend class Input;
+
         GLFWwindow* m_window;
         int         m_width;
         int         m_height;
