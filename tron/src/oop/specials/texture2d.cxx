@@ -14,18 +14,18 @@ namespace
         return ret;
     }
 
-    tron::TextureFormat GetDefaultFormat(int nChannel)
+    tron::oop::specials::TextureFormat GetDefaultFormat(int nChannel)
     {
         switch (nChannel)
         {
         case 1:
-            return tron::TextureFormat::R;
+            return tron::oop::specials::TextureFormat::R;
         case 2:
-            return tron::TextureFormat::RG;
+            return tron::oop::specials::TextureFormat::RG;
         case 3:
-            return tron::TextureFormat::RGB;
+            return tron::oop::specials::TextureFormat::RGB;
         case 4:
-            return tron::TextureFormat::RGBA;
+            return tron::oop::specials::TextureFormat::RGBA;
 
         default:
             throw std::range_error("Channel number must be in [1-4].");
