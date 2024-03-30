@@ -1,6 +1,6 @@
 # трон
 
-A simple game with OpenGL 4.5, written in C++26.
+A simple game engine with OpenGL 4.5, written in C++26.
 
 ## Requirements
 
