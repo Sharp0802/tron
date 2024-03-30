@@ -36,7 +36,7 @@ namespace tron::oop::specials
         Bind();
     }
 
-#define ASSERT_ALIVE { if (!m_disposed) throw std::runtime_error("An object already disposed."); }
+#define ASSERT_ALIVE { if (m_disposed) throw std::runtime_error("An object already disposed."); }
 
     void VertexBuffer::EnsureBinding() const
     {
