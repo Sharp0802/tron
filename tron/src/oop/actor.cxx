@@ -1,4 +1,5 @@
 #include "oop/actor.h"
+#include "oop/components/transform.h"
 
 namespace tron::oop
 {
@@ -39,6 +40,13 @@ namespace tron::oop
 
     Actor::Actor(CObjectEvents events): CObject(GetType<Actor>(), events)
     {
+        TryAddComponent(new components::Transform(this, nullptr));
+    }
+
+    Actor::~Actor()
+    {
+        for (const auto component: std::views::values(m_componentTable))
+            delete component;
     }
 
     Component* Actor::GetComponent(TypeId type)
