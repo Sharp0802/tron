@@ -1,24 +1,26 @@
+#include <oop/actor.h>
+#include <oop/components/camera.h>
+#include <oop/components/meshrenderer.h>
+#include <oop/components/transform.h>
+#include <oop/specials/material.h>
+#include <oop/specials/program.h>
+#include <oop/specials/texture2d.h>
+#include <oop/sys/input.h>
+#include <oop/sys/window.h>
+
 #include "pch.h"
 
 #include "log.h"
-#include "mesh.h"
-#include "program.h"
-#include "texture2d.h"
-#include "def.h"
-#include "material.h"
-#include "meshrenderer.h"
-#include "transform.h"
-#include "sys/window.h"
-#include "camera.h"
 
 #define TITLE "трон"
 
 using namespace tron;
+using namespace tron::oop;
 
 void LimitFrame(const int frame, const double delta)
 {
-	if (const auto delay = 1.0 / frame - delta; delay > 0)
-		std::this_thread::sleep_for(std::chrono::milliseconds(static_cast<int64_t>(delay * 1000)));
+    if (const auto delay = 1.0 / frame - delta; delay > 0)
+        std::this_thread::sleep_for(std::chrono::milliseconds(static_cast<int64_t>(delay * 1000)));
 }
 
 void InitializeTerminal()
@@ -35,93 +37,147 @@ void InitializeTerminal()
 
 int main()
 {
-	InitializeTerminal();
+    InitializeTerminal();
 
-	glfwSetErrorCallback([](int err, const char* desc) {
-		log::fw.err() << std::hex << err << std::dec << ": " << desc << std::endl;
-	});
+    glfwSetErrorCallback([](int err, const char* desc)
+    {
+        log::fw.err() << std::hex << err << std::dec << ": " << desc << std::endl;
+    });
 
+    sys::Window window;
+    window.Title = TITLE;
+    window.Bind();
 
-	sys::Window window(640, 480, TITLE);
-	window.Bind();
+    log::LogGLParameters();
 
-	log::LogGLParameters();
+    // Initialize GL
+    {
+        glewExperimental = GL_TRUE;
+        glewInit();
 
-	// Initialize GL
-	{
-		glewExperimental = GL_TRUE;
-		glewInit();
+        const GLubyte* renderer = glGetString(GL_RENDERER);
+        const GLubyte* version  = glGetString(GL_VERSION);
 
-		const GLubyte* renderer = glGetString(GL_RENDERER);
-		const GLubyte* version  = glGetString(GL_VERSION);
+        log::gl.out() << "Renderer: " << renderer << std::endl;
+        log::gl.out() << "Version : " << version << std::endl;
 
-		log::gl.out() << "Renderer: " << renderer << std::endl;
-		log::gl.out() << "Version : " << version << std::endl;
+        glEnable(GL_DEPTH_TEST);
+        glDepthFunc(GL_LESS);
+    }
 
-		glEnable(GL_DEPTH_TEST);
-		glDepthFunc(GL_LESS);
-	}
+    specials::Material material;
+    material.Program->AttachShader("res/sha/sample.f.glsl");
+    material.Program->AttachShader("res/sha/sample.v.glsl");
+    material.Program->Link();
+    material.Program->Use();
+    material.Program->Validate();
+    specials::Texture2D tex("res/tex/brick_wall.jpg");
+    material.Texture = &tex;
 
-	ptr<MeshRenderer> object;
-	{
-		auto program = std::make_shared<Program>();
-		program->AttachShader("sample.f.glsl");
-		program->AttachShader("sample.v.glsl");
-		program->Link();
-		program->Use();
-		program->Validate();
+#define UNIT 1.0f
 
-		auto tex      = std::make_shared<Texture2D>("res/tex/brick_wall.jpg");
-		auto material = std::make_shared<Material>(program, tex);
+    float points[] = {
+        -UNIT, UNIT, UNIT, 0, 1, 0, 1, 1,
+        UNIT, UNIT, UNIT, 0, 0, 1, 1, 0,
+        UNIT, -UNIT, UNIT, 1, 0, 0, 0, 0,
+        -UNIT, -UNIT, UNIT, 1, 0, 0, 0, 1,
 
-		object = std::make_shared<MeshRenderer>(material, Mesh::GetPrimitiveObject(Primitive::Cube));
-		object->Transform->Scale = glm::vec3(0.3f);
-	}
+        UNIT, UNIT, UNIT, 0, 1, 0, 1, 1,
+        UNIT, UNIT, -UNIT, 0, 0, 1, 1, 0,
+        UNIT, -UNIT, -UNIT, 1, 0, 0, 0, 0,
+        UNIT, -UNIT, UNIT, 1, 0, 0, 0, 1,
 
-	const auto camera = std::make_shared<Camera>();
+        UNIT, UNIT, -UNIT, 0, 1, 0, 1, 1,
+        -UNIT, UNIT, -UNIT, 0, 0, 1, 1, 0,
+        -UNIT, -UNIT, -UNIT, 1, 0, 0, 0, 0,
+        UNIT, -UNIT, -UNIT, 1, 0, 0, 0, 1,
 
-	camera->Transform->Position = glm::vec3(0.0f, 0.0f, -3.0f);
+        -UNIT, UNIT, -UNIT, 0, 1, 0, 1, 1,
+        -UNIT, UNIT, UNIT, 0, 0, 1, 1, 0,
+        -UNIT, -UNIT, UNIT, 1, 0, 0, 0, 0,
+        -UNIT, -UNIT, -UNIT, 1, 0, 0, 0, 1,
 
-	window.Camera = camera;
+        -UNIT, UNIT, -UNIT, 0, 1, 0, 1, 1,
+        UNIT, UNIT, -UNIT, 0, 0, 1, 1, 0,
+        UNIT, UNIT, UNIT, 1, 0, 0, 0, 0,
+        -UNIT, UNIT, UNIT, 1, 0, 0, 0, 1,
 
-	double last = glfwGetTime();
-	while (!window.ShouldClose)
-	{
-		const double time = glfwGetTime();
-		const double delta = time - last;
-		last = time;
+        -UNIT, -UNIT, UNIT, 0, 1, 0, 1, 1,
+        UNIT, -UNIT, UNIT, 0, 0, 1, 1, 0,
+        UNIT, -UNIT, -UNIT, 1, 0, 0, 0, 0,
+        -UNIT, -UNIT, -UNIT, 1, 0, 0, 0, 1,
+    };
 
-		LimitFrame(60, delta);
-		
-		// OnUpdate
-		{
-			window.PollEvents();
-			if (window.GetKey(GLFW_KEY_ESCAPE))
-				window.ShouldClose = true;
+#define RECT_P(p, i) (p+(i*4))
+#define RECT(i) RECT_P(0,i),RECT_P(1,i),RECT_P(2,i),RECT_P(0,i),RECT_P(2,i),RECT_P(3,i)
 
-			if (window.GetKey(GLFW_KEY_W))
-				camera->Transform->LocalPosition += glm::vec3(0, 0, delta);
-			if (window.GetKey(GLFW_KEY_S))
-				camera->Transform->LocalPosition += glm::vec3(0, 0, -delta);
-			if (window.GetKey(GLFW_KEY_A))
-				camera->Transform->LocalPosition += glm::vec3(delta, 0, 0);
-			if (window.GetKey(GLFW_KEY_D))
-				camera->Transform->LocalPosition += glm::vec3(-delta, 0, 0);
+    std::initializer_list<uint16_t> indices = {
+        RECT(0), RECT(1), RECT(2), RECT(3), RECT(4), RECT(5),
+    };
 
-			if (window.GetKey(GLFW_KEY_SPACE))
-				camera->Transform->Position += glm::vec3(0, delta, 0);
-			if (window.GetKey(GLFW_KEY_LEFT_SHIFT))
-				camera->Transform->Position += glm::vec3(0, -delta, 0);
-		}
+    specials::Mesh mesh({
+        specials::VertexAttributeInfo::Create<glm::vec3>(),
+        specials::VertexAttributeInfo::Create<glm::vec3>(),
+        specials::VertexAttributeInfo::Create<glm::vec2>()
+    });
+    mesh.Bind();
+    mesh.VBO->Buffer(points, sizeof points);
+    mesh.EBO->Buffer(indices);
 
-		// OnDraw
-		window.Draw();
-		{
-			object->Bind(window.Projection, camera->Matrix);
-			object->Draw();
-		}
-	}
+    Actor actor({});
 
-	glfwTerminate();
-	return 0;
+    components::MeshRenderer renderer(&actor);
+    renderer.Material = &material;
+    renderer.Mesh = &mesh;
+    actor.TryAddComponent(&renderer);
+
+    Actor cameraActor({});
+    components::Camera camera(&cameraActor);
+    camera.Bind();
+
+    auto* cameraTransform = dynamic_cast<components::Transform*>(cameraActor.GetComponent(
+        GetType<components::Transform>()));
+    cameraTransform->Position = glm::vec3(0.0f, 0.0f, -3.0f);
+
+    double last = glfwGetTime();
+    while (!window.ShouldClose)
+    {
+        const double time  = glfwGetTime();
+        const double delta = time - last;
+        const auto deltaF  = static_cast<float>(delta);
+        last               = time;
+
+        LimitFrame(60, delta);
+
+        // OnUpdate
+        {
+            sys::Input::Poll();
+            if (sys::Input::GetKey(GLFW_KEY_ESCAPE))
+                window.ShouldClose = true;
+
+            if (sys::Input::GetKey(GLFW_KEY_W))
+                cameraTransform->LocalPosition += glm::vec3(0, 0, delta);
+            if (sys::Input::GetKey(GLFW_KEY_S))
+                cameraTransform->LocalPosition += glm::vec3(0, 0, -delta);
+            if (sys::Input::GetKey(GLFW_KEY_A))
+                cameraTransform->LocalPosition += glm::vec3(delta, 0, 0);
+            if (sys::Input::GetKey(GLFW_KEY_D))
+                cameraTransform->LocalPosition += glm::vec3(-delta, 0, 0);
+
+            if (sys::Input::GetKey(GLFW_KEY_SPACE))
+                cameraTransform->Position += glm::vec3(0, delta, 0);
+            if (sys::Input::GetKey(GLFW_KEY_LEFT_SHIFT))
+                cameraTransform->Position += glm::vec3(0, -delta, 0);
+        }
+
+        // OnDraw
+        window.Draw();
+        {
+            actor.Update(deltaF);
+            cameraActor.Update(deltaF);
+        }
+    }
+
+    glfwTerminate();
+    return 0;
 }
