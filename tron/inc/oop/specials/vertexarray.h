@@ -1,9 +1,9 @@
 #ifndef TRON_VERTEXARRAY_H
 #define TRON_VERTEXARRAY_H
 
-#include "pch.h"
+#include "oop/oop.h"
 
-namespace tron
+namespace tron::oop::specials
 {
     template<typename T>
     struct VertexAttribute;
@@ -84,9 +84,7 @@ namespace tron
 
     public:
         VertexArray& operator=(const VertexArray&) = delete;
-
         VertexArray(const VertexArray&) = delete;
-
         VertexArray() = delete;
 
         VertexArray(std::initializer_list<VertexAttributeInfo> attributes);

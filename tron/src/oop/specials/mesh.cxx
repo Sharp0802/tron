@@ -1,23 +1,12 @@
-#include "pch.h"
-#include "mesh.h"
+#include "oop/specials/mesh.h"
 
-namespace tron
+namespace tron::oop::specials
 {
     Mesh::Mesh(std::initializer_list<VertexAttributeInfo> attributes, VertexBufferUsage usage)
         : m_ebo(usage),
           m_vbo(VertexBufferTarget::ARRAY_BUFFER, usage),
           m_vao(attributes)
     {
-    }
-
-    VertexBuffer& Mesh::get_VBO()
-    {
-        return m_vbo;
-    }
-
-    IndexBuffer& Mesh::get_EBO()
-    {
-        return m_ebo;
     }
 
     void Mesh::Bind()
@@ -37,7 +26,18 @@ namespace tron
         glDrawElements(GL_TRIANGLES, static_cast<GLsizei>(size), m_ebo.Type(), nullptr);
     }
 
-    ptr<Mesh> Mesh::GetPrimitiveObject(Primitive type)
+    getter_decl_(Mesh, EBO)
+    {
+        return &m_ebo;
+    }
+
+    getter_decl_(Mesh, VBO)
+    {
+        return &m_vbo;
+    }
+
+    /*
+    Mesh Mesh::GetPrimitiveObject(Primitive type)
     {
         switch (type)
         {
@@ -85,14 +85,14 @@ namespace tron
                 RECT(0), RECT(1), RECT(2), RECT(3), RECT(4), RECT(5),
             };
 
-            auto mesh = std::make_shared_mesh({
+            Mesh mesh {
                     VertexAttributeInfo::Create<glm::vec3>(),
                     VertexAttributeInfo::Create<glm::vec3>(),
                     VertexAttributeInfo::Create<glm::vec2>(),
-            });
-            mesh->Bind();
-            mesh->VBO.Buffer(points, sizeof points);
-            mesh->EBO.Buffer(indices);
+            };
+            mesh.Bind();
+            mesh.VBO.Buffer(points, sizeof points);
+            mesh.EBO.Buffer(indices);
 
             return mesh;
         }
@@ -100,4 +100,5 @@ namespace tron
             throw std::range_error("Undefined primitive mesh type");
         }
     }
+    */
 }
