@@ -2,13 +2,21 @@
 
 namespace tron::oop::components
 {
-    Transform::Transform(Transform* parent)
-        : CObject(GetType<Transform>(), {}),
+    Transform::Transform(Actor* actor, Transform* parent)
+        : Component(GetType<Transform>(), actor, {}),
           m_parent(parent),
           m_position(0),
           m_rotation(),
           m_scale(1)
     {
+    }
+
+    glm::vec3 Transform::ToParent(glm::vec3 v) const
+    {
+        v = glm::rotate(v, Rotation.x, {1, 0, 0});
+        v = glm::rotate(v, Rotation.y, {0, 1, 0});
+        v = glm::rotate(v, Rotation.z, {0, 0, 1});
+        return v;
     }
 
     uint32_t Transform::CountChild() const
