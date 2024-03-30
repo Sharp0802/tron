@@ -46,7 +46,8 @@ namespace tron::oop
           m_lastActive(false),
           m_active(false)
     {
-        m_events.Created(this);
+        if (m_events.Created)
+            m_events.Created(this);
         m_active = true;
     }
 
@@ -56,15 +57,18 @@ namespace tron::oop
 
         if (m_lastActive != m_active)
         {
-            (m_active ? m_events.Enabled : m_events.Disabled)(this);
+            if (const auto fn = m_active ? m_events.Enabled : m_events.Disabled)
+                fn(this);
             m_lastActive = m_active;
         }
 
-        m_events.Updated(this, delta);
+        if (m_events.Updated)
+            m_events.Updated(this, delta);
 
         if (m_disposing && !m_disposed)
         {
-            m_events.Destroyed(this);
+            if (m_events.Destroyed)
+                m_events.Destroyed(this);
             m_disposed = true;
         }
     }
