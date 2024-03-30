@@ -16,7 +16,6 @@ IF (CMAKE_BUILD_TYPE STREQUAL "Debug")
 ELSE()
     add_definitions(-D_RELEASE)
 ENDIF()
-add_compile_options(-Wno-gnu-string-literal-operator-template -fdeclspec -fms-extensions)
 
 ###################################################
 # GLFW/GLEW Installation                          #
@@ -93,7 +92,7 @@ include_directories(${CMAKE_BINARY_DIR}/.tmp/inc)
 file(GLOB_RECURSE SOURCES   ${CMAKE_CURRENT_LIST_DIR}/src/*.cxx)
 file(GLOB_RECURSE RESOURCES ${CMAKE_CURRENT_LIST_DIR}/res/**)
 
-add_executable(tron ${SOURCES})
+add_library(tron SHARED ${SOURCES})
 target_precompile_headers(tron PRIVATE ${CMAKE_CURRENT_LIST_DIR}/inc/pch.h)
 target_include_directories(tron PRIVATE
         ${CMAKE_CURRENT_LIST_DIR}/inc)
