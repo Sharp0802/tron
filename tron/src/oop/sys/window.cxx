@@ -1,9 +1,10 @@
-#include "pch.h"
-#include "sys/window.h"
+#include "oop/sys/window.h"
 #include "log.h"
 
-namespace tron::sys
+namespace tron::oop::sys
 {
+    static Window* s_window = nullptr;
+
     void Window::UpdateFPSCounter()
     {
         static double prev = glfwGetTime();
@@ -26,42 +27,32 @@ namespace tron::sys
         cFPS++;
     }
 
-    void Window::OnScroll(double x, const double y)
+    void Window::OnScroll(double, const double y) const
     {
+        if (m_onScroll)
+            m_onScroll(static_cast<float>(y));
     }
 
-    void Window::OnMouseMove(double x, double y)
+    void Window::OnMouseMove(const double x, const double y) const
     {
-        static double lastX, lastY;
-        static bool first = true;
-
-        if (first)
-        {
-            lastX = 0;
-            lastY = 0;
-            first = false;
-        }
-
-        double xoffset = x - lastX;
-        double yoffset = lastY - y; // reversed since y-coordinates range from bottom to top
-        lastX = x;
-        lastY = y;
-
-        constexpr float sensitivity = 0.001f;
-        xoffset *= sensitivity;
-        yoffset *= sensitivity;
-
-        if (Camera)
-            Camera->Transform->Rotation += glm::vec3(yoffset, xoffset, 0);
-
-        //glfwSetCursorPos(m_window, m_width / 2., m_height / 2.);
+        if (m_onMouseMove)
+            m_onMouseMove(static_cast<float>(x), static_cast<float>(y));
     }
 
-    Window::Window(const int w, const int h, std::string title)
-        : m_window(nullptr),
-          m_width(w), m_height(h),
-          m_title(std::move(title))
+    Window::Window()
+        : CObject(GetType<Window>(), {
+            .Updated = [](CObject* self, float){
+                dynamic_cast<Window*>(self)->UpdateFPSCounter();
+            }
+        }),
+          m_window(nullptr),
+          m_width(640),
+          m_height(480)
     {
+        if (s_window != nullptr)
+            throw std::runtime_error("Couldn't handle multiple window");
+        s_window = this;
+
         if (!glfwInit())
         {
             log::fw.err() << "glfwInit(): Couldn't start glfw3" << std::endl;
@@ -107,8 +98,6 @@ namespace tron::sys
             auto* ctx = static_cast<Window*>(glfwGetWindowUserPointer(window));
             ctx->OnMouseMove(x, y);
         });
-
-        glfwSetInputMode(m_window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     }
 
     void Window::Bind()
@@ -123,38 +112,49 @@ namespace tron::sys
         UpdateFPSCounter();
 
         glViewport(0, 0, m_width, m_height);
-
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     }
 
-    void Window::PollEvents()
+    getter_decl_(Window, Width)
     {
-        glfwPollEvents();
+        return m_width;
     }
 
-    bool Window::GetKey(const int key) const
+    getter_decl_(Window, Height)
     {
-        return glfwGetKey(m_window, key) == GLFW_PRESS;
+        return m_height;
     }
 
-    std::string Window::get_Title() const
+    getter_decl_(Window, Title)
     {
-        return m_title;
+        return m_title.data();
     }
 
-    void Window::put_Title(std::string title)
+    setter_decl_(Window, Title)
     {
-        m_title = std::move(title);
+        m_title = std::string(value);
     }
 
-    bool Window::get_ShouldClose() const
+    getter_decl_(Window, ShouldClose)
     {
         return glfwWindowShouldClose(m_window);
     }
 
-    void Window::put_ShouldClose(const bool value) const
+    setter_decl_(Window, ShouldClose)
     {
         glfwSetWindowShouldClose(m_window, value);
+    }
+
+    getter_decl_(Window, Instanced)
+    {
+        return s_window != nullptr;
+    }
+
+    Window& Window::Instance()
+    {
+        if (s_window == nullptr)
+            throw std::runtime_error("Instance is null");
+        return *s_window;
     }
 }
