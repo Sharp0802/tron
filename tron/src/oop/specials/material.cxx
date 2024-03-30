@@ -10,7 +10,7 @@ namespace tron::oop::specials
 
     getter_decl_(Material, Program)
     {
-        return &m_program;
+        return const_cast<decltype(Program)>(&m_program);
     }
 
     getter_decl_(Material, Texture)

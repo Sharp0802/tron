@@ -28,12 +28,12 @@ namespace tron::oop::specials
 
     getter_decl_(Mesh, EBO)
     {
-        return &m_ebo;
+        return const_cast<decltype(EBO)>(&m_ebo);
     }
 
     getter_decl_(Mesh, VBO)
     {
-        return &m_vbo;
+        return const_cast<decltype(VBO)>(&m_vbo);
     }
 
     /*
