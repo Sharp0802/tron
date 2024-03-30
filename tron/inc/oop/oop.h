@@ -4,10 +4,10 @@
 #include "pch.h"
 
 #define setter_(p) void set__##p(decltype(p) value)
-#define getter_(p) decltype(p) get__##p()
+#define getter_(p) decltype(p) get__##p() const
 
 #define setter_decl_(t, p) void t::set__##p(decltype(t::p) value)
-#define getter_decl_(t, p) decltype(t::p) t::get__##p()
+#define getter_decl_(t, p) decltype(t::p) t::get__##p() const
 
 #define mutable_(t, p)                               \
     __declspec(property(get=get__##p, put=set__##p)) \
@@ -19,11 +19,6 @@
     __declspec(property(get=get__##p)) \
     t p;                               \
     getter_(p)
-
-#define static_immutable_(t, p)        \
-    __declspec(property(get=get__##p)) \
-    static t p;                        \
-    static getter_(p)
 
 using TypeId = std::uint64_t;
 
