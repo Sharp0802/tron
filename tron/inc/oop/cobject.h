@@ -34,6 +34,8 @@ namespace tron::oop
         bool m_lastActive;
         bool m_active;
 
+        void OnCreatedProxy();
+
     protected:
         virtual void OnCreated();
         virtual void OnEnabled();

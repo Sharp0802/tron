@@ -2,6 +2,11 @@
 
 namespace tron::oop
 {
+    void CObject::OnCreatedProxy()
+    {
+        OnCreated();
+    }
+
     void CObject::OnCreated()
     {
         if (m_events.Created)
@@ -46,8 +51,7 @@ namespace tron::oop
           m_lastActive(false),
           m_active(false)
     {
-        if (m_events.Created)
-            m_events.Created(this);
+        OnCreatedProxy();
         m_active = true;
     }
 
@@ -57,19 +61,20 @@ namespace tron::oop
 
         if (m_lastActive != m_active)
         {
-            if (const auto fn = m_active ? m_events.Enabled : m_events.Disabled)
-                fn(this);
+            if (m_active)
+                OnEnabled();
+            else
+                OnDisabled();
             m_lastActive = m_active;
         }
-
-        if (m_events.Updated)
-            m_events.Updated(this, delta);
-
-        if (m_disposing && !m_disposed)
+        else if (m_disposing && !m_disposed)
         {
-            if (m_events.Destroyed)
-                m_events.Destroyed(this);
+            OnDestroyed();
             m_disposed = true;
+        }
+        else
+        {
+            OnUpdated(delta);
         }
     }
 
