@@ -1,4 +1,7 @@
 #include "oop/sys/window.h"
+
+#include <oop/sys/input.h>
+
 #include "log.h"
 
 namespace tron::oop::sys
@@ -29,14 +32,12 @@ namespace tron::oop::sys
 
     void Window::OnScroll(double, const double y) const
     {
-        if (m_onScroll)
-            m_onScroll(static_cast<float>(y));
+        Input::SetScroll(y);
     }
 
     void Window::OnMouseMove(const double x, const double y) const
     {
-        if (m_onMouseMove)
-            m_onMouseMove(static_cast<float>(x), static_cast<float>(y));
+        Input::SetMouseMove(glm::vec2(x, y));
     }
 
     Window::Window()
