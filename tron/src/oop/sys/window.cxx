@@ -117,6 +117,11 @@ namespace tron::oop::sys
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     }
 
+    void Window::SetInputMode(int key, int mod)
+    {
+        glfwSetInputMode(m_window, key, mod);
+    }
+
     getter_decl_(Window, Width)
     {
         return m_width;

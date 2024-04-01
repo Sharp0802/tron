@@ -15,9 +15,6 @@ namespace tron::oop::sys
         int         m_height;
         std::string m_title;
 
-        void (*m_onScroll)(float v) = nullptr;
-        void (*m_onMouseMove)(float x, float y) = nullptr;
-
         void UpdateFPSCounter();
 
         void OnScroll(double x, double y) const;
@@ -30,6 +27,8 @@ namespace tron::oop::sys
         void Bind();
 
         void Draw();
+
+        void SetInputMode(int key, int mod);
 
         immutable_(int, Width);
         immutable_(int, Height);
