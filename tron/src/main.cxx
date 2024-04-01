@@ -3,7 +3,6 @@
 #include <oop/components/meshrenderer.h>
 #include <oop/components/transform.h>
 #include <oop/specials/material.h>
-#include <oop/specials/program.h>
 #include <oop/specials/texture2d.h>
 #include <oop/sys/input.h>
 #include <oop/sys/window.h>
@@ -35,6 +34,47 @@ void InitializeTerminal()
 #endif
 }
 
+#define UNIT 1.0f
+
+float points[] = {
+    -UNIT, UNIT, UNIT, 0, 1, 0, 1, 1,
+    UNIT, UNIT, UNIT, 0, 0, 1, 1, 0,
+    UNIT, -UNIT, UNIT, 1, 0, 0, 0, 0,
+    -UNIT, -UNIT, UNIT, 1, 0, 0, 0, 1,
+
+    UNIT, UNIT, UNIT, 0, 1, 0, 1, 1,
+    UNIT, UNIT, -UNIT, 0, 0, 1, 1, 0,
+    UNIT, -UNIT, -UNIT, 1, 0, 0, 0, 0,
+    UNIT, -UNIT, UNIT, 1, 0, 0, 0, 1,
+
+    UNIT, UNIT, -UNIT, 0, 1, 0, 1, 1,
+    -UNIT, UNIT, -UNIT, 0, 0, 1, 1, 0,
+    -UNIT, -UNIT, -UNIT, 1, 0, 0, 0, 0,
+    UNIT, -UNIT, -UNIT, 1, 0, 0, 0, 1,
+
+    -UNIT, UNIT, -UNIT, 0, 1, 0, 1, 1,
+    -UNIT, UNIT, UNIT, 0, 0, 1, 1, 0,
+    -UNIT, -UNIT, UNIT, 1, 0, 0, 0, 0,
+    -UNIT, -UNIT, -UNIT, 1, 0, 0, 0, 1,
+
+    -UNIT, UNIT, -UNIT, 0, 1, 0, 1, 1,
+    UNIT, UNIT, -UNIT, 0, 0, 1, 1, 0,
+    UNIT, UNIT, UNIT, 1, 0, 0, 0, 0,
+    -UNIT, UNIT, UNIT, 1, 0, 0, 0, 1,
+
+    -UNIT, -UNIT, UNIT, 0, 1, 0, 1, 1,
+    UNIT, -UNIT, UNIT, 0, 0, 1, 1, 0,
+    UNIT, -UNIT, -UNIT, 1, 0, 0, 0, 0,
+    -UNIT, -UNIT, -UNIT, 1, 0, 0, 0, 1,
+};
+
+#define RECT_P(p, i) (p+(i*4))
+#define RECT(i) RECT_P(0,i),RECT_P(1,i),RECT_P(2,i),RECT_P(0,i),RECT_P(2,i),RECT_P(3,i)
+
+constexpr std::initializer_list<uint8_t> indices = {
+    RECT(0), RECT(1), RECT(2), RECT(3), RECT(4), RECT(5),
+};
+
 int main()
 {
     InitializeTerminal();
@@ -65,79 +105,90 @@ int main()
         glDepthFunc(GL_LESS);
     }
 
-    specials::Material material;
-    material.Program->AttachShader("res/sha/sample.f.glsl");
-    material.Program->AttachShader("res/sha/sample.v.glsl");
-    material.Program->Link();
-    material.Program->Use();
-    material.Program->Validate();
-    specials::Texture2D tex("res/tex/brick_wall.jpg");
-    material.Texture = &tex;
+    Actor actor({
+        .Enabled = [](CObject* self)
+        {
+            auto* actor = dynamic_cast<Actor*>(self);
 
-#define UNIT 1.0f
+            auto* tex = new specials::Texture2D("res/tex/brick_wall.jpg");
+            auto* material = new specials::Material;
+            material->Program->AttachShader("res/sha/sample.f.glsl");
+            material->Program->AttachShader("res/sha/sample.v.glsl");
+            material->Program->Link();
+            material->Program->Use();
+            material->Program->Validate();
+            material->Texture = tex;
 
-    float points[] = {
-        -UNIT, UNIT, UNIT, 0, 1, 0, 1, 1,
-        UNIT, UNIT, UNIT, 0, 0, 1, 1, 0,
-        UNIT, -UNIT, UNIT, 1, 0, 0, 0, 0,
-        -UNIT, -UNIT, UNIT, 1, 0, 0, 0, 1,
+            auto* mesh = new specials::Mesh({
+                specials::VertexAttributeInfo::Create<glm::vec3>(),
+                specials::VertexAttributeInfo::Create<glm::vec3>(),
+                specials::VertexAttributeInfo::Create<glm::vec2>()
+            });
+            mesh->Bind();
+            mesh->VBO->Buffer(points, sizeof points);
+            mesh->EBO->Buffer(indices);
 
-        UNIT, UNIT, UNIT, 0, 1, 0, 1, 1,
-        UNIT, UNIT, -UNIT, 0, 0, 1, 1, 0,
-        UNIT, -UNIT, -UNIT, 1, 0, 0, 0, 0,
-        UNIT, -UNIT, UNIT, 1, 0, 0, 0, 1,
-
-        UNIT, UNIT, -UNIT, 0, 1, 0, 1, 1,
-        -UNIT, UNIT, -UNIT, 0, 0, 1, 1, 0,
-        -UNIT, -UNIT, -UNIT, 1, 0, 0, 0, 0,
-        UNIT, -UNIT, -UNIT, 1, 0, 0, 0, 1,
-
-        -UNIT, UNIT, -UNIT, 0, 1, 0, 1, 1,
-        -UNIT, UNIT, UNIT, 0, 0, 1, 1, 0,
-        -UNIT, -UNIT, UNIT, 1, 0, 0, 0, 0,
-        -UNIT, -UNIT, -UNIT, 1, 0, 0, 0, 1,
-
-        -UNIT, UNIT, -UNIT, 0, 1, 0, 1, 1,
-        UNIT, UNIT, -UNIT, 0, 0, 1, 1, 0,
-        UNIT, UNIT, UNIT, 1, 0, 0, 0, 0,
-        -UNIT, UNIT, UNIT, 1, 0, 0, 0, 1,
-
-        -UNIT, -UNIT, UNIT, 0, 1, 0, 1, 1,
-        UNIT, -UNIT, UNIT, 0, 0, 1, 1, 0,
-        UNIT, -UNIT, -UNIT, 1, 0, 0, 0, 0,
-        -UNIT, -UNIT, -UNIT, 1, 0, 0, 0, 1,
-    };
-
-#define RECT_P(p, i) (p+(i*4))
-#define RECT(i) RECT_P(0,i),RECT_P(1,i),RECT_P(2,i),RECT_P(0,i),RECT_P(2,i),RECT_P(3,i)
-
-    std::initializer_list<uint16_t> indices = {
-        RECT(0), RECT(1), RECT(2), RECT(3), RECT(4), RECT(5),
-    };
-
-    specials::Mesh mesh({
-        specials::VertexAttributeInfo::Create<glm::vec3>(),
-        specials::VertexAttributeInfo::Create<glm::vec3>(),
-        specials::VertexAttributeInfo::Create<glm::vec2>()
+            auto* renderer = new components::MeshRenderer(actor);
+            renderer->Material = material;
+            renderer->Mesh     = mesh;
+            actor->TryAddComponent(renderer);
+        }
     });
-    mesh.Bind();
-    mesh.VBO->Buffer(points, sizeof points);
-    mesh.EBO->Buffer(indices);
 
-    Actor actor({});
+    Actor cameraActor({
+        .Enabled = [](CObject* self)
+        {
+            auto* actor = dynamic_cast<Actor*>(self);
 
-    components::MeshRenderer renderer(&actor);
-    renderer.Material = &material;
-    renderer.Mesh = &mesh;
-    actor.TryAddComponent(&renderer);
+            auto* camera = new components::Camera(actor);
+            actor->TryAddComponent(camera);
+            camera->Bind();
 
-    Actor cameraActor({});
-    components::Camera camera(&cameraActor);
-    camera.Bind();
+            auto* transform = dynamic_cast<components::Transform*>(actor->
+                GetComponent(GetType<components::Transform>()));
+            transform->Position = glm::vec3(0.0f, 0.0f, -3.0f);
 
-    auto* cameraTransform = dynamic_cast<components::Transform*>(cameraActor.GetComponent(
-        GetType<components::Transform>()));
-    cameraTransform->Position = glm::vec3(0.0f, 0.0f, -3.0f);
+            sys::Window::Instance().SetInputMode(GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+        },
+        .Updated = [](CObject* self, float delta)
+        {
+            static glm::vec2 lastMouse;
+
+            auto* actor = dynamic_cast<Actor*>(self);
+
+            if (sys::Input::GetKey(GLFW_KEY_ESCAPE))
+                sys::Window::Instance().ShouldClose = true;
+
+            auto* transform = dynamic_cast<components::Transform*>(actor->
+                GetComponent(GetType<components::Transform>()));
+
+            if (sys::Input::GetKey(GLFW_KEY_W))
+                transform->LocalPosition += glm::vec3(0, 0, delta);
+            if (sys::Input::GetKey(GLFW_KEY_S))
+                transform->LocalPosition += glm::vec3(0, 0, -delta);
+            if (sys::Input::GetKey(GLFW_KEY_A))
+                transform->LocalPosition += glm::vec3(delta, 0, 0);
+            if (sys::Input::GetKey(GLFW_KEY_D))
+                transform->LocalPosition += glm::vec3(-delta, 0, 0);
+
+            if (sys::Input::GetKey(GLFW_KEY_SPACE))
+                transform->Position += glm::vec3(0, delta, 0);
+            if (sys::Input::GetKey(GLFW_KEY_LEFT_SHIFT))
+                transform->Position += glm::vec3(0, -delta, 0);
+
+            auto* camera = dynamic_cast<components::Camera*>(actor->
+                GetComponent(GetType<components::Camera>()));
+
+            camera->FoV += sys::Input::GetScroll();
+
+            auto rot = transform->Rotation;
+            auto off = (lastMouse - sys::Input::GetMouseMove()) * .1f * delta;
+            rot.x -= off.y;
+            rot.y -= -off.x;
+            transform->Rotation = rot;
+            lastMouse = sys::Input::GetMouseMove();
+        }
+    });
 
     double last = glfwGetTime();
     while (!window.ShouldClose)
@@ -149,26 +200,7 @@ int main()
 
         LimitFrame(60, delta);
 
-        // OnUpdate
-        {
-            sys::Input::Poll();
-            if (sys::Input::GetKey(GLFW_KEY_ESCAPE))
-                window.ShouldClose = true;
-
-            if (sys::Input::GetKey(GLFW_KEY_W))
-                cameraTransform->LocalPosition += glm::vec3(0, 0, delta);
-            if (sys::Input::GetKey(GLFW_KEY_S))
-                cameraTransform->LocalPosition += glm::vec3(0, 0, -delta);
-            if (sys::Input::GetKey(GLFW_KEY_A))
-                cameraTransform->LocalPosition += glm::vec3(delta, 0, 0);
-            if (sys::Input::GetKey(GLFW_KEY_D))
-                cameraTransform->LocalPosition += glm::vec3(-delta, 0, 0);
-
-            if (sys::Input::GetKey(GLFW_KEY_SPACE))
-                cameraTransform->Position += glm::vec3(0, delta, 0);
-            if (sys::Input::GetKey(GLFW_KEY_LEFT_SHIFT))
-                cameraTransform->Position += glm::vec3(0, -delta, 0);
-        }
+        sys::Input::Poll();
 
         // OnDraw
         window.Draw();
