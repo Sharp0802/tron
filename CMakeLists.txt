@@ -23,4 +23,5 @@ add_compile_options(-Wno-gnu-string-literal-operator-template -fdeclspec -fms-ex
 # Subprojects                                     #
 ###################################################
 add_subdirectory(tron)
+add_subdirectory(tron-cg)
 add_subdirectory(tron-sample)
