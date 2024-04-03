@@ -11,7 +11,7 @@ A simple game engine with OpenGL 4.5, written in C++26.
   - OpenGL 3.2 core profile compatible \[not tested, not recommanded\]
   - (But, With Mesa and Zink, You can use Vulkan instead of OpenGL)
 - CPU
-  - x86/x86-64 required
+  - x86-64 required
 
 ### Building
 
@@ -19,7 +19,8 @@ A simple game engine with OpenGL 4.5, written in C++26.
 > Building in Windows is not supported temporarily.
 > (Code generator is broken on Windows)
 
-- `clang`, `libclang`
+- `libstdc++` (GNU C++ Library)
+- `clang`, `libclang`, `libomp`
   - Tested on `clang 18.1.3`
 - CMake 3.25 or above
 - Internet connection (project automatically downloads dependencies)
@@ -29,12 +30,13 @@ A simple game engine with OpenGL 4.5, written in C++26.
   - Powershell (You don't have to install modern powershell; Tested on 5.1)
   - OpenGL Driver; see [docs](https://www.khronos.org/opengl/wiki/Getting_Started#Windows)
 
-## Thanks to (Dependencies)
+## Thanks to
 
 - CMake (https://cmake.org/)
-- Clang, libclang (https://clang.llvm.org/)
-- OpenGL (https://www.opengl.org/)
 - GLEW (https://glew.sourceforge.net/)
 - GLFW (https://www.glfw.org/)
-- STB (https://github.com/nothings/stb)
+- LLVM/Clang (https://clang.llvm.org/)
+- LLVM/OpenMP (https://openmp.llvm.org/)
 - .NET (https://github.com/dotnet)
+- OpenGL (https://www.opengl.org/)
+- STB (https://github.com/nothings/stb)
