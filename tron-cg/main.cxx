@@ -316,15 +316,21 @@ int main(const int argc, char* argv[])
     std::string root(include);
     root += "/oop";
 
-    const char* s_argv[] = {
+    std::vector<const char*> eArgv{
         "-D_DEBUG",
         "-I", include.data(),
-        "-I/usr/lib/gcc/x86_64-pc-linux-gnu/13.2.1/include/",
-        "-I/usr/include/",
         "-std=gnu++26", "-fcolor-diagnostics",
         "-fdeclspec", "-fms-extensions",
         "-x", "c++"
     };
+    for (auto i = 1; i < argc; ++i)
+    {
+        eArgv.push_back("-I");
+        eArgv.push_back(argv[i]);
+    }
+    for (const auto& arg: eArgv)
+        std::cout << arg << ' ';
+    std::cout << std::endl;
 
     std::vector<std::filesystem::directory_entry> dirVec;
     for (const auto& entry: std::filesystem::recursive_directory_iterator(root))
@@ -343,7 +349,7 @@ int main(const int argc, char* argv[])
         const auto unit  = clang_parseTranslationUnit(
             index,
             entry.path().c_str(),
-            s_argv, std::size(s_argv),
+            eArgv.data(), static_cast<int>(eArgv.size()),
             nullptr, 0,
             CXTranslationUnit_None);
 
