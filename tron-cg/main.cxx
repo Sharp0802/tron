@@ -194,7 +194,9 @@ std::string GetScript(const CXCursor& cursor)
 
     thread_local char buffer[BUFSIZ];
     if (clsName == fnName)
-        fnName = "__init__";
+        fnName = "__ctor__";
+    if ("~" + clsName == fnName)
+        fnName = "__dtor__";
 
     snprintf(
         buffer,
