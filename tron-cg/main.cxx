@@ -136,6 +136,8 @@ std::string DeduceDecltype(const CXCursor& cls, const CXType& type)
 std::string TypeToString(const CXCursor& cls, const CXType& type)
 {
     auto t = DeduceDecltype(cls, type);
+    if (auto pos = t.rfind(':'); pos != std::string::npos)
+        t.replace(0, pos + 1, "");
     ConvertTypeFormat(t);
     return t;
 }
