@@ -221,19 +221,84 @@ namespace Tron.CodeGen
     return buffer;
 }
 
+std::string GetScript(const std::string& enumC, const std::vector<CXCursor>& enums)
+{
+    std::stringstream ss;
+    ss << R"(
+namespace Tron.CodeGen
+{
+    public enum )" << enumC << R"(
+    {
+)";
+    for (const auto& decl: enums)
+        ss << "        " << ToString(clang_getCursorSpelling(decl)) << " = " << clang_getEnumConstantDeclValue(decl) << ',' << std::endl;
+    ss << R"(
+    }
+}
+)";
+    return ss.str();
+}
+
 struct Context
 {
     std::set<CXIndex> Indices;
     std::set<CXTranslationUnit> Translations;
-    std::vector<CXCursor> Types;
+    std::map<std::string, std::vector<CXCursor>> Enums;
+    std::map<std::string, CXCursor> Types;
     std::map<std::string, CXCursor> Functions;
 };
 
 struct LocalContext
 {
+    std::map<std::string, std::vector<CXCursor>> Enums;
     std::map<std::string, CXCursor> Types;
     std::map<std::string, CXCursor> Functions;
 };
+
+CXChildVisitResult HandleFunction(CXCursor c, LocalContext& llctx)
+{
+    const auto kind = clang_getCursorKind(c);
+    if (kind != CXCursor_CXXMethod &&
+        kind != CXCursor_Constructor &&
+        kind != CXCursor_Destructor &&
+        kind != CXCursor_ConversionFunction)
+        return CXChildVisit_Recurse;
+    if (clang_CXXMethod_isDeleted(c))
+        return CXChildVisit_Continue;
+
+    auto cls = clang_getCursorSemanticParent(c);
+    if (clang_getCursorKind(cls) != CXCursor_ClassDecl)
+        return CXChildVisit_Continue;
+
+    auto ns = GetFullyQualifiedNamespace(clang_getCursorSemanticParent(cls));
+    if (!ns.contains("tron"))
+        return CXChildVisit_Continue;
+
+
+    llctx.Types[ToString(clang_getCursorSpelling(cls))] = cls;
+    llctx.Functions[ToString(clang_getCursorSpelling(c))] = c;
+
+    return CXChildVisit_Continue;
+}
+
+CXChildVisitResult HandleEnum(CXCursor c, LocalContext& llctx)
+{
+    const auto kind = clang_getCursorKind(c);
+    if (kind != CXCursor_EnumConstantDecl)
+        return CXChildVisit_Recurse;
+
+    auto enumC = clang_getCursorSemanticParent(c);
+    if (clang_getCursorKind(enumC) != CXCursor_EnumDecl)
+        return CXChildVisit_Continue;
+
+    auto ns = GetFullyQualifiedNamespace(clang_getCursorSemanticParent(enumC));
+    if (!ns.contains("tron"))
+        return CXChildVisit_Continue;
+
+    llctx.Enums[ToString(clang_getCursorSpelling(enumC))].push_back(c);
+
+    return CXChildVisit_Continue;
+}
 
 int main(const int argc, char* argv[])
 {
@@ -286,63 +351,44 @@ int main(const int argc, char* argv[])
         clang_visitChildren(clang_getTranslationUnitCursor(unit), [](CXCursor c, CXCursor, void* d)
         {
             auto& llctx = *static_cast<decltype(lctx)*>(d);
-
-            const auto kind = clang_getCursorKind(c);
-            if (kind != CXCursor_CXXMethod &&
-                kind != CXCursor_Constructor &&
-                kind != CXCursor_Destructor &&
-                kind != CXCursor_ConversionFunction)
-                return CXChildVisit_Recurse;
-            if (clang_CXXMethod_isDeleted(c))
-                return CXChildVisit_Continue;
-
-            auto cls = clang_getCursorSemanticParent(c);
-            if (clang_getCursorKind(cls) != CXCursor_ClassDecl)
-                return CXChildVisit_Continue;
-
-            auto ns = GetFullyQualifiedNamespace(clang_getCursorSemanticParent(cls));
-            if (!ns.contains("tron"))
-                return CXChildVisit_Continue;
-
-
-            llctx.Types[ToString(clang_getCursorSpelling(cls))]    = cls;
-            llctx.Functions[ToString(clang_Cursor_getMangling(c))] = c;
-
-            return CXChildVisit_Continue;
+            if (auto r = HandleFunction(c, llctx); r != CXChildVisit_Recurse)
+                return r;
+            return HandleEnum(c, llctx);
         }, &lctx);
 
         {
             std::scoped_lock lock(mutex);
             ctx.Indices.emplace(index);
             ctx.Translations.emplace(unit);
-            for (const auto& [key, value]: lctx.Functions)
-                ctx.Functions[key] = value;
-            for (const auto& type: lctx.Types | std::views::values)
-                ctx.Types.push_back(type);
+            for (const auto& fn: lctx.Functions)
+                ctx.Functions.emplace(fn);
+            for (const auto& type: lctx.Types)
+                ctx.Types.emplace(type);
+            for (const auto& [key, value]: lctx.Enums)
+                ctx.Enums[key] = value;
 
             std::cout << '[' << ++c << '/' << dirVec.size() << "] " << entry.path() << std::endl;
         }
     }
 
-    std::set<std::string> psb;
+    std::vector<std::string> psb;
+    psb.reserve(ctx.Types.size() + ctx.Functions.size() + ctx.Enums.size());
 
-#pragma omp parallel for
-    for (const auto& cursor: ctx.Types)
-    {
-        std::scoped_lock lock(mutex);
-        psb.emplace(GetScript(clang_getCursorType(cursor)));
-    }
-
-    auto curIter = ctx.Functions | std::views::values;
-    std::vector curVec(curIter.begin(), curIter.end());
-#pragma omp parallel for
-    for (const auto& cursor: curVec)
-    {
-        std::scoped_lock lock(mutex);
-        psb.emplace(GetScript(cursor));
-    }
+    for (const auto& cursor: ctx.Types | std::views::values)
+        psb.push_back(GetScript(clang_getCursorType(cursor)));
+    for (const auto& cursor: ctx.Functions | std::views::values)
+        psb.push_back(GetScript(cursor));
+    for (const auto& [key, value]: ctx.Enums)
+        psb.push_back(GetScript(key, value));
 
     std::stringstream ss;
+    ss << R"(
+using System.Runtime.InteropServices;
+using CsInterop;
+using GlmSharp;
+
+using GLenum = uint;
+)";
     for (const auto& str: psb)
         ss << str << std::endl;
 
