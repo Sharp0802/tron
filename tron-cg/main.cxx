@@ -71,6 +71,9 @@ void ConvertTypeFormat(std::string& type)
     Replace(type, "GLuint", "uint");
     Replace(type, "GLint", "int");
     Replace(type, "GLfloat", "float");
+
+    Replace(type, "string", "NativeString");
+    Replace(type, "initializer_list", "InitializerList");
 }
 
 void ToFieldConvention(std::string& type)
