@@ -149,9 +149,9 @@ std::string GetScript(const CXType& type)
         buffer,
         std::size(buffer),
         R"(
-namespace Tron.CodeGen
+namespace Tron.Runtime.CodeGen
 {
-    internal unsafe partial struct %s
+    public unsafe partial struct %s
     {
         private fixed byte _value[%lld];
     }
@@ -202,12 +202,12 @@ std::string GetScript(const CXCursor& cursor)
         buffer,
         std::size(buffer),
         R"(
-namespace Tron.CodeGen
+namespace Tron.Runtime.CodeGen
 {
-    internal unsafe partial struct %s
+    public unsafe partial struct %s
     {
         [DllImport("tron", EntryPoint="%s", ExactSpelling=true)]
-        internal static extern %s %s(%s);
+        public static extern %s %s(%s);
     }
 }
 )",
@@ -225,7 +225,7 @@ std::string GetScript(const std::string& enumC, const std::vector<CXCursor>& enu
 {
     std::stringstream ss;
     ss << R"(
-namespace Tron.CodeGen
+namespace Tron.Runtime.CodeGen
 {
     public enum )" << enumC << R"(
     {
@@ -394,6 +394,7 @@ using CsInterop;
 using GlmSharp;
 
 using GLenum = uint;
+using TypeId = ulong;
 )";
     for (const auto& str: psb)
         ss << str << std::endl;
