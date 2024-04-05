@@ -34,6 +34,16 @@ namespace tron::oop::components
         return m_children[i];
     }
 
+    getter_decl_(Transform, Parent)
+    {
+        return m_parent;
+    }
+
+    setter_decl_(Transform, Parent)
+    {
+        m_parent = value;
+    }
+
     getter_decl_(Transform, Position)
     {
         return m_position;

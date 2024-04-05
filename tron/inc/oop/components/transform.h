@@ -30,6 +30,8 @@ namespace tron::oop::components
         Transform* GetChild(uint32_t i) const;
 
 
+        mutable_(Transform*, Parent);
+
         mutable_(glm::vec3, Position);
 
         mutable_(glm::vec3, LocalPosition);
