@@ -109,6 +109,7 @@ int main()
         .Enabled = [](CObject* self)
         {
             auto* actor = dynamic_cast<Actor*>(self);
+            actor->TryAddComponent(new components::Transform(actor, nullptr));
 
             auto* tex = new specials::Texture2D("res/tex/brick_wall.jpg");
             auto* material = new specials::Material;
@@ -139,6 +140,7 @@ int main()
         .Enabled = [](CObject* self)
         {
             auto* actor = dynamic_cast<Actor*>(self);
+            actor->TryAddComponent(new components::Transform(actor, nullptr));
 
             auto* camera = new components::Camera(actor);
             actor->TryAddComponent(camera);

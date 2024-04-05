@@ -40,7 +40,6 @@ namespace tron::oop
 
     Actor::Actor(CObjectEvents events): CObject(GetType<Actor>(), events)
     {
-        TryAddComponent(new components::Transform(this, nullptr));
     }
 
     Actor::~Actor()
