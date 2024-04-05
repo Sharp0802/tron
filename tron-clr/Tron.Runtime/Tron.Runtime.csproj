@@ -1,0 +1,22 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <TargetFramework>net8.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <PackageReference Include="CsInterop" Version="0.0.4" />
+      <PackageReference Include="GlmSharp" Version="0.9.8" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Compile Include="..\cg.g.cs">
+        <Link>CodeGen\cg.g.cs</Link>
+      </Compile>
+    </ItemGroup>
+
+</Project>
