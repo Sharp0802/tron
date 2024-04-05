@@ -44,7 +44,23 @@ namespace tron::oop::specials
         const sys::MemoryMappedFile mmf(name);
         const auto addr = mmf.GetAddress();
 
-        glShaderSource(m_handle, 1, reinterpret_cast<const GLchar* const*>(&addr), nullptr);
+        const GLchar* sources[] = {
+#ifdef USE_OPENGL_ES
+            R"(
+#version 310 es
+
+precision mediump float;
+precision highp   int;
+precision lowp    sampler2D;
+precision lowp    samplerCube;
+)",
+#else
+            "#version 450 core",
+#endif
+            static_cast<const char*>(addr)
+        };
+
+        glShaderSource(m_handle, std::size(sources), sources, nullptr);
         glCompileShader(m_handle);
 
         GLint params = -1;
