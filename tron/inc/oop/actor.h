@@ -9,7 +9,7 @@ namespace tron::oop
 {
     class Actor final : public CObject
     {
-        std::map<TypeId, Component*> m_componentTable;
+        std::vector<Component*> m_components;
 
     protected:
         void OnCreated() override;
@@ -22,11 +22,14 @@ namespace tron::oop
         explicit Actor(CObjectEvents events);
         ~Actor() override;
 
-        Component* GetComponent(TypeId type);
+        [[nodiscard]]
+        int CountComponent(TypeId type) const;
 
-        bool TryAddComponent(Component* component);
+        Component* GetComponent(TypeId type, int i = 0);
 
-        void RemoveComponent(Component* component);
+        void AddComponent(Component* component);
+
+        bool RemoveComponent(Component* component);
     };
 }
 

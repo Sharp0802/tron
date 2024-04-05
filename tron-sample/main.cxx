@@ -109,7 +109,7 @@ int main()
         .Enabled = [](CObject* self)
         {
             auto* actor = dynamic_cast<Actor*>(self);
-            actor->TryAddComponent(new components::Transform(actor, nullptr));
+            actor->AddComponent(new components::Transform(actor, nullptr));
 
             auto* tex = new specials::Texture2D("res/tex/brick_wall.jpg");
             auto* material = new specials::Material;
@@ -132,7 +132,7 @@ int main()
             auto* renderer = new components::MeshRenderer(actor);
             renderer->Material = material;
             renderer->Mesh     = mesh;
-            actor->TryAddComponent(renderer);
+            actor->AddComponent(renderer);
         }
     });
 
@@ -140,10 +140,10 @@ int main()
         .Enabled = [](CObject* self)
         {
             auto* actor = dynamic_cast<Actor*>(self);
-            actor->TryAddComponent(new components::Transform(actor, nullptr));
+            actor->AddComponent(new components::Transform(actor, nullptr));
 
             auto* camera = new components::Camera(actor);
-            actor->TryAddComponent(camera);
+            actor->AddComponent(camera);
             camera->Bind();
 
             auto* transform = dynamic_cast<components::Transform*>(actor->

@@ -5,35 +5,35 @@ namespace tron::oop
 {
     void Actor::OnCreated()
     {
-        for (const auto component: std::views::values(m_componentTable))
+        for (const auto component: m_components)
             component->OnCreated();
         CObject::OnCreated();
     }
 
     void Actor::OnEnabled()
     {
-        for (const auto component: std::views::values(m_componentTable))
+        for (const auto component: m_components)
             component->OnEnabled();
         CObject::OnEnabled();
     }
 
     void Actor::OnUpdated(float delta)
     {
-        for (const auto component: std::views::values(m_componentTable))
+        for (const auto component: m_components)
             component->OnUpdated(delta);
         CObject::OnUpdated(delta);
     }
 
     void Actor::OnDisabled()
     {
-        for (const auto component: std::views::values(m_componentTable))
+        for (const auto component: m_components)
             component->OnDisabled();
         CObject::OnDisabled();
     }
 
     void Actor::OnDestroyed()
     {
-        for (const auto component: std::views::values(m_componentTable))
+        for (const auto component: m_components)
             component->OnDestroyed();
         CObject::OnDestroyed();
     }
@@ -44,26 +44,43 @@ namespace tron::oop
 
     Actor::~Actor()
     {
-        for (const auto component: std::views::values(m_componentTable))
+        for (const auto component: m_components)
             delete component;
     }
 
-    Component* Actor::GetComponent(TypeId type)
+    int Actor::CountComponent(TypeId type) const
     {
-        return m_componentTable.contains(type) ? m_componentTable[type] : nullptr;
+        int c = 0;
+        for (const auto& component: m_components)
+            if (component->Type == type)
+                c++;
+        return c;
     }
 
-    bool Actor::TryAddComponent(Component* component)
+    Component* Actor::GetComponent(TypeId type, int i)
     {
-        if (m_componentTable.contains(component->Type))
-            return false;
-        m_componentTable[component->Type] = component;
-        return true;
+        for (const auto& component: m_components)
+            if (component->Type == type && i-- == 0)
+                return component;
+        return nullptr;
     }
 
-    void Actor::RemoveComponent(Component* component)
+    void Actor::AddComponent(Component* component)
+    {
+        m_components.push_back(component);
+    }
+
+    bool Actor::RemoveComponent(Component* component)
     {
         component->Destroy();
-        m_componentTable.erase(component->Type);
+        for (auto v = m_components.cbegin(); v != m_components.cend(); ++v)
+        {
+            if (*v == component)
+            {
+                m_components.erase(v);
+                return true;
+            }
+        }
+        return false;
     }
 }
