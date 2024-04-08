@@ -114,6 +114,8 @@ std::string DeduceDecltype(const CXCursor& cls, const CXType& type)
         return "bool";
     if (cb.name == "m_matrix")
         return "glm::mat4";
+    if (cb.name == "m_program" && ToString(clang_getCursorSpelling(cls)) == "Material")
+        return "Program*";
 
     clang_Type_visitFields(
         clang_getCursorType(cls),
