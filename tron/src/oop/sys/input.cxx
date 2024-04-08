@@ -35,6 +35,13 @@ namespace tron::oop::sys
         return s_move;
     }
 
+    bool Input::GetMouseClick(const int button)
+    {
+        if (!Window::Instanced())
+            return false;
+        return glfwGetMouseButton(Window::Instance().m_window, button);
+    }
+
     float Input::GetScroll()
     {
         return s_scroll;

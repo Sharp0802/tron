@@ -20,6 +20,8 @@ namespace tron::oop::sys
 
         static glm::vec2 GetMouseMove();
 
+        static bool GetMouseClick(int button);
+
         static float GetScroll();
     };
 }
