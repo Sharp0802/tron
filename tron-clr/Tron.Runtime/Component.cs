@@ -42,4 +42,12 @@ public abstract class Component : CObject
             );
         }
     }
+
+    ~Component()
+    {
+        unsafe
+        {
+            NativeMemory.Free(Pointer);
+        }
+    }
 }

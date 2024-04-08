@@ -25,6 +25,14 @@ public abstract class Actor : CObject
         Components = new ComponentCollection(this);
         Components.Add<Transform>();
     }
+
+    ~Actor()
+    {
+        unsafe
+        {
+            NativeMemory.Free(Pointer);
+        }
+    }
     
     internal unsafe CodeGen.Actor* Pointer { get; }
 

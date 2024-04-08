@@ -25,6 +25,14 @@ public sealed class Material : IContextObject
             _program = new Program(CodeGen.Material.get__Program(_pointer));
         }
     }
+
+    ~Material()
+    {
+        unsafe
+        {
+            NativeMemory.Free(_pointer);
+        }
+    }
     
     /// <inheritdoc />
     public void Use()

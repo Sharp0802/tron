@@ -8,4 +8,9 @@ internal static class NativeMemory
     {
         return (T*)global::System.Runtime.InteropServices.NativeMemory.Alloc((UIntPtr)Marshal.SizeOf<T>());
     }
+
+    public static unsafe void Free(void* p)
+    {
+        global::System.Runtime.InteropServices.NativeMemory.Free(p);
+    }
 }

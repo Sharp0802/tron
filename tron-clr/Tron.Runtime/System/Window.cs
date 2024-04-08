@@ -22,6 +22,14 @@ public sealed class Window
         }
     }
 
+    ~Window()
+    {
+        unsafe
+        {        
+            NativeMemory.Free(_pointer);
+        }
+    }
+
     /// <summary>
     /// Gets width of the <see cref="Window"/>.
     /// </summary>

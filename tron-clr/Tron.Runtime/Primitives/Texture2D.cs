@@ -65,6 +65,7 @@ public sealed class Texture2D : Texture
         unsafe
         {
             CodeGen.Texture2D.__dtor__(_pointer);
+            NativeMemory.Free(_pointer);
         }
     }
 }

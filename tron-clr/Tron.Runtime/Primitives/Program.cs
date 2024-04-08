@@ -1,6 +1,7 @@
 using CsInterop;
 using GlmSharp;
 using Tron.Runtime.Abstraction;
+using Tron.Runtime.InteropServices;
 
 namespace Tron.Runtime.Primitives;
 
@@ -126,9 +127,7 @@ public sealed class Program : IDisposable, IContextObject
         }
     }
 
-    /// <summary>
-    /// Disposes <see cref="Program"/>.
-    /// </summary>
+    /// <inheritdoc />
     public void Dispose()
     {
         if (Interlocked.CompareExchange(ref _disposed, 1, 0) != 0)
@@ -137,6 +136,7 @@ public sealed class Program : IDisposable, IContextObject
         unsafe
         {
             CodeGen.Program.__dtor__(_pointer);
+            NativeMemory.Free(_pointer);
         }
     }
 }
