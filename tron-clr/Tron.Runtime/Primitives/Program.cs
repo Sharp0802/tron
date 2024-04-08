@@ -1,24 +1,25 @@
 using CsInterop;
 using GlmSharp;
 using Tron.Runtime.Abstraction;
-using Tron.Runtime.InteropServices;
 
 namespace Tron.Runtime.Primitives;
 
-public class Program : IDisposable, IContextObject
+/// <summary>
+/// A shader-program object.
+/// </summary>
+public sealed class Program : IDisposable, IContextObject
 {
-    private                 int              _disposed = 0;
+    private                 int              _disposed;
     private readonly unsafe CodeGen.Program* _pointer;
-
-    public Program()
+    
+    internal unsafe Program(CodeGen.Program* ptr)
     {
-        unsafe
-        {
-            _pointer = NativeMemory.Alloc<CodeGen.Program>();
-            CodeGen.Program.__ctor__(_pointer);
-        }
+        _pointer = ptr;
     }
 
+    /// <summary>
+    /// Links <see cref="Shader"/>s.
+    /// </summary>
     public void Link()
     {
         unsafe
@@ -26,7 +27,8 @@ public class Program : IDisposable, IContextObject
             CodeGen.Program.Link(_pointer);
         }
     }
-
+    
+    /// <inheritdoc />
     public void Use()
     {
         unsafe
@@ -35,6 +37,11 @@ public class Program : IDisposable, IContextObject
         }
     }
 
+    /// <summary>
+    /// Gets location of <see cref="Shader"/> field.
+    /// </summary>
+    /// <param name="name">The name of field to find</param>
+    /// <returns>Location of specified field</returns>
     public int GetLocation(string name)
     {
         unsafe
@@ -44,6 +51,11 @@ public class Program : IDisposable, IContextObject
         }
     }
 
+    /// <summary>
+    /// Attaches <see cref="Shader"/> to <see cref="Program"/> by its path.
+    /// </summary>
+    /// <param name="name">The path of <see cref="Shader"/></param>
+    /// <returns>Attached <see cref="Shader"/></returns>
     public Shader AttachShader(string name)
     {
         unsafe
@@ -54,6 +66,9 @@ public class Program : IDisposable, IContextObject
         }
     }
 
+    /// <summary>
+    /// Validates <see cref="Program"/>.
+    /// </summary>
     public void Validate()
     {
         unsafe
@@ -62,6 +77,15 @@ public class Program : IDisposable, IContextObject
         }
     }
 
+    /// <summary>
+    /// Sets <see cref="Shader"/> field with value.
+    /// </summary>
+    /// <param name="loc">The location of field.</param>
+    /// <param name="value">A value to use</param>
+    /// <typeparam name="T">The type of field</typeparam>
+    /// <exception cref="NotSupportedException">
+    /// Type of <paramref name="value"/> is not supported by engine.
+    /// </exception>
     public void Set<T>(int loc, T value) where T : unmanaged
     {
         switch (value)
@@ -80,6 +104,9 @@ public class Program : IDisposable, IContextObject
         }
     }
 
+    /// <summary>
+    /// Prints logs of <see cref="Program"/>.
+    /// </summary>
     public void PrintLog()
     {
         unsafe
@@ -88,6 +115,9 @@ public class Program : IDisposable, IContextObject
         }
     }
 
+    /// <summary>
+    /// Prints information of <see cref="Program"/>.
+    /// </summary>
     public void PrintAll()
     {
         unsafe
@@ -96,6 +126,9 @@ public class Program : IDisposable, IContextObject
         }
     }
 
+    /// <summary>
+    /// Disposes <see cref="Program"/>.
+    /// </summary>
     public void Dispose()
     {
         if (Interlocked.CompareExchange(ref _disposed, 1, 0) != 0)

@@ -1,6 +1,9 @@
 namespace Tron.Runtime.Primitives;
 
-public class Shader
+/// <summary>
+/// A shader object.
+/// </summary>
+public sealed class Shader
 {
     private readonly unsafe CodeGen.Shader* _pointer;
 
@@ -9,6 +12,9 @@ public class Shader
         _pointer = ptr;
     }
 
+    /// <summary>
+    /// Prints logs of <see cref="Shader"/>.
+    /// </summary>
     public void PrintLog()
     {
         unsafe
