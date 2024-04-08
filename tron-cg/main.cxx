@@ -276,7 +276,7 @@ CXChildVisitResult HandleFunction(CXCursor c, LocalContext& llctx)
 
 
     llctx.Types[ToString(clang_getCursorSpelling(cls))] = cls;
-    llctx.Functions[ToString(clang_getCursorSpelling(c))] = c;
+    llctx.Functions[ToString(clang_Cursor_getMangling(c))] = c;
 
     return CXChildVisit_Continue;
 }
