@@ -13,6 +13,8 @@ namespace tron::oop::specials
         Texture* m_texture = nullptr;
 
     public:
+        Material();
+
         void Bind();
 
         immutable_(Program*, Program);

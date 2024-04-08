@@ -2,6 +2,8 @@
 
 namespace tron::oop::specials
 {
+    Material::Material() = default;
+
     void Material::Bind()
     {
         m_program.Use();
