@@ -1,9 +1,10 @@
 using System.Collections;
+using GlmSharp;
 using Tron.Runtime.InteropServices;
 
 namespace Tron.Runtime.Specials;
 
-public class Transform : Component
+public sealed class Transform : Component
 {
     private Transform? _parent;
 
@@ -44,6 +45,71 @@ public class Transform : Component
     }
     
     public TransformCollection Children { get; }
+
+    public vec3 Position
+    {
+        get
+        {
+            unsafe
+            {
+                return CodeGen.Transform.get__Position((CodeGen.Transform*)Pointer);
+            }
+        }
+        set
+        {
+            unsafe
+            {
+                CodeGen.Transform.set__Position((CodeGen.Transform*)Pointer, value);
+            }
+        }
+    }
+
+    public vec3 LocalPosition
+    {
+        set
+        {
+            unsafe
+            {
+                CodeGen.Transform.set__LocalPosition((CodeGen.Transform*)Pointer, value);
+            }
+        }
+    }
+
+    public quat Rotation
+    {
+        get
+        {
+            unsafe
+            {
+                return CodeGen.Transform.get__Rotation((CodeGen.Transform*)Pointer);
+            }
+        }
+        set
+        {
+            unsafe
+            {
+                CodeGen.Transform.set__Rotation((CodeGen.Transform*)Pointer, value);
+            }
+        }
+    }
+
+    public vec3 Scale
+    {
+        get
+        {
+            unsafe
+            {
+                return CodeGen.Transform.get__Scale((CodeGen.Transform*)Pointer);
+            }
+        }
+        set
+        {
+            unsafe
+            {
+                CodeGen.Transform.set__Scale((CodeGen.Transform*)Pointer, value);
+            }
+        }
+    }
 
     public class TransformCollection : IReadOnlyCollection<Transform>
     {
