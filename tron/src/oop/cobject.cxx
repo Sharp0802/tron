@@ -69,6 +69,8 @@ namespace tron::oop
         }
         else if (m_disposing && !m_disposed)
         {
+            if (m_active)
+                OnDisabled();
             OnDestroyed();
             m_disposed = true;
         }
