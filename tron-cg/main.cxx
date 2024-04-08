@@ -151,7 +151,7 @@ std::string GetScript(const CXType& type)
         R"(
 namespace Tron.Runtime.CodeGen
 {
-    public unsafe partial struct %s
+    internal unsafe partial struct %s
     {
         private fixed byte _value[%lld];
     }
@@ -204,10 +204,10 @@ std::string GetScript(const CXCursor& cursor)
         R"(
 namespace Tron.Runtime.CodeGen
 {
-    public unsafe partial struct %s
+    internal unsafe partial struct %s
     {
         [DllImport("tron", EntryPoint="%s", ExactSpelling=true)]
-        public static extern %s %s(%s);
+        internal static extern %s %s(%s);
     }
 }
 )",
@@ -364,6 +364,7 @@ int main(const int argc, char* argv[])
 
         {
             std::scoped_lock lock(mutex);
+
             ctx.Indices.emplace(index);
             ctx.Translations.emplace(unit);
             for (const auto& fn: lctx.Functions)
