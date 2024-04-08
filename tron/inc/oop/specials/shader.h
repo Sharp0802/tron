@@ -38,6 +38,18 @@ namespace tron::oop::specials
         void Set<glm::mat4>(GLint loc, glm::mat4 value);
     }
 
+    class ShaderInterop
+    {
+        static void Set_int(GLint loc, int value);
+        static void Set_float(GLint loc, float value);
+        static void Set_vec2(GLint loc, glm::vec2 value);
+        static void Set_vec3(GLint loc, glm::vec3 value);
+        static void Set_vec4(GLint loc, glm::vec4 value);
+        static void Set_mat2(GLint loc, glm::mat2 value);
+        static void Set_mat3(GLint loc, glm::mat3 value);
+        static void Set_mat4(GLint loc, glm::mat4 value);
+    };
+
     class Shader
     {
         const GLenum m_type;

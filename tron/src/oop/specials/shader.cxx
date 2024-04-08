@@ -87,6 +87,26 @@ precision lowp    samplerCube;
         PrintLog(m_handle);
     }
 
+#define SHADER_SET_INTEROP_IMPL(type)                     \
+    void ShaderInterop::Set_##type(GLint loc, type value) \
+    {                                                     \
+        shader_detail::Set(loc, value);                   \
+}
+#define SHADER_SET_INTEROP_IMPL_GLM(type)                      \
+    void ShaderInterop::Set_##type(GLint loc, glm::type value) \
+    {                                                          \
+        shader_detail::Set(loc, value);                        \
+    }
+
+    SHADER_SET_INTEROP_IMPL(int);
+    SHADER_SET_INTEROP_IMPL(float);
+    SHADER_SET_INTEROP_IMPL_GLM(vec2);
+    SHADER_SET_INTEROP_IMPL_GLM(vec3);
+    SHADER_SET_INTEROP_IMPL_GLM(vec4);
+    SHADER_SET_INTEROP_IMPL_GLM(mat2);
+    SHADER_SET_INTEROP_IMPL_GLM(mat3);
+    SHADER_SET_INTEROP_IMPL_GLM(mat4);
+
     void Shader::PrintLog(GLuint handle)
     {
         static __thread char buf[BUFSIZ];
