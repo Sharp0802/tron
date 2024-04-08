@@ -4,7 +4,7 @@ namespace Tron.Runtime.CodeGen;
 
 [Serializable]
 [StructLayout(LayoutKind.Sequential)]
-public struct CObjectEvents
+internal struct CObjectEvents
 {
     public delegate void CObjectEventHandler(IntPtr _);
 

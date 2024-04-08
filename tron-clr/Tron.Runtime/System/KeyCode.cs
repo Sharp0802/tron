@@ -1,8 +1,11 @@
 namespace Tron.Runtime.System;
 
+/// <summary>
+/// Codes of keyboard keys.
+/// </summary>
 public enum KeyCode
 {
-    Unknown        = -1,
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     Space          = 32,
     Apostrophe     = 39,
     Comma          = 44,
@@ -122,5 +125,6 @@ public enum KeyCode
     RightControl   = 345,
     RightAlt       = 346,
     RightSuper     = 347,
-    Menu           = 348,
+    Menu           = 348
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }

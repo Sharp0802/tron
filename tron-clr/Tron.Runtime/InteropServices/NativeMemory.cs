@@ -2,7 +2,7 @@ using System.Runtime.InteropServices;
 
 namespace Tron.Runtime.InteropServices;
 
-public static class NativeMemory
+internal static class NativeMemory
 {
     public static unsafe T* Alloc<T>() where T : unmanaged
     {

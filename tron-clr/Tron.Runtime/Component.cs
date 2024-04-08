@@ -3,13 +3,19 @@ using Tron.Runtime.InteropServices;
 
 namespace Tron.Runtime;
 
+/// <summary>
+/// A module of <see cref="Actor"/> that has same event cycle with owner <see cref="Actor"/>.
+/// </summary>
 public abstract class Component : CObject
 {
     internal unsafe CodeGen.Component* Pointer { get; }
     
+    /// <summary>
+    /// Gets the owner <see cref="Actor"/>.
+    /// </summary>
     public Actor Actor { get; }
-
-    protected internal Component(Actor actor, IntPtr ptr)
+    
+    private protected Component(Actor actor, IntPtr ptr)
     {
         unsafe
         {
@@ -18,6 +24,10 @@ public abstract class Component : CObject
         }
     }
     
+    /// <summary>
+    /// Initialize <see cref="Component"/>.
+    /// </summary>
+    /// <param name="actor">The owner of this <see cref="Component"/></param>
     protected Component(Actor actor)
     {
         Actor = actor;

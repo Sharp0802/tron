@@ -3,7 +3,7 @@ using System.Linq.Expressions;
 
 namespace Tron.Runtime.Reflection;
 
-public class Dynamic
+internal static class Dynamic
 {
     private record ConstructorKey(Type Type, Type[] Args);
     

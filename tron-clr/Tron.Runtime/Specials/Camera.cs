@@ -3,6 +3,10 @@ using Tron.Runtime.InteropServices;
 
 namespace Tron.Runtime.Specials;
 
+/// <summary>
+/// A built-in <see cref="Component"/> that acts as a Camera.
+/// </summary>
+/// <param name="actor">The owner of this <see cref="Component"/></param>
 public sealed class Camera(Actor actor) : Component(actor, CreateCamera(actor))
 {
     private static IntPtr CreateCamera(Actor actor)
@@ -15,6 +19,9 @@ public sealed class Camera(Actor actor) : Component(actor, CreateCamera(actor))
         }
     }
 
+    /// <summary>
+    /// Gets or sets near distance of frustum
+    /// </summary>
     public float Near
     {
         get
@@ -33,6 +40,9 @@ public sealed class Camera(Actor actor) : Component(actor, CreateCamera(actor))
         }
     }
 
+    /// <summary>
+    /// Gets or sets far distance of frustum
+    /// </summary>
     public float Far
     {
         get
@@ -51,6 +61,9 @@ public sealed class Camera(Actor actor) : Component(actor, CreateCamera(actor))
         }
     }
 
+    /// <summary>
+    /// Gets or sets FoV (field of view) of <see cref="Camera"/> 
+    /// </summary>
     public float FoV
     {
         get
@@ -69,6 +82,9 @@ public sealed class Camera(Actor actor) : Component(actor, CreateCamera(actor))
         }
     }
 
+    /// <summary>
+    /// Gets projection matrix for <see cref="Camera"/> 
+    /// </summary>
     public mat4 Projection
     {
         get
@@ -80,6 +96,9 @@ public sealed class Camera(Actor actor) : Component(actor, CreateCamera(actor))
         }
     }
 
+    /// <summary>
+    /// Gets view matrix for <see cref="Camera"/> 
+    /// </summary>
     public mat4 View
     {
         get
@@ -91,8 +110,14 @@ public sealed class Camera(Actor actor) : Component(actor, CreateCamera(actor))
         }
     }
 
+    /// <summary>
+    /// Gets current bound <see cref="Camera"/>
+    /// </summary>
     public static Camera? Current { get; private set; }
 
+    /// <summary>
+    /// Use this camera as primary
+    /// </summary>
     public void Use()
     {
         unsafe
@@ -102,22 +127,27 @@ public sealed class Camera(Actor actor) : Component(actor, CreateCamera(actor))
         }
     }
 
+    /// <inheritdoc />
     public override void OnCreated()
     {
     }
 
+    /// <inheritdoc />
     public override void OnEnabled()
     {
     }
 
+    /// <inheritdoc />
     public override void OnUpdated(float delta)
     {
     }
 
+    /// <inheritdoc />
     public override void OnDisabled()
     {
     }
 
+    /// <inheritdoc />
     public override void OnDestroyed()
     {
     }

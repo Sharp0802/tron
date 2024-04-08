@@ -4,6 +4,9 @@ using Tron.Runtime.InteropServices;
 
 namespace Tron.Runtime.Specials;
 
+/// <summary>
+/// A built-in <see cref="Component"/> that acts as a Transform.
+/// </summary>
 public sealed class Transform : Component
 {
     private Transform? _parent;
@@ -14,19 +17,22 @@ public sealed class Transform : Component
         {
             var pointer = NativeMemory.Alloc<CodeGen.Transform>();
             CodeGen.Transform.__ctor__(
-                pointer, 
-                actor.Pointer, 
+                pointer,
+                actor.Pointer,
                 parent is null ? null : (CodeGen.Transform*)parent.Pointer);
             return (IntPtr)pointer;
         }
     }
-    
-    public Transform(Actor actor, Transform? parent) : base(actor, CreateTransform(actor, parent))
+
+    internal Transform(Actor actor, Transform? parent) : base(actor, CreateTransform(actor, parent))
     {
         _parent  = parent;
         Children = new TransformCollection(this);
     }
 
+    /// <summary>
+    /// Gets or sets parent of this <see cref="Transform"/>.
+    /// </summary>
     public Transform? Parent
     {
         get => _parent;
@@ -35,7 +41,7 @@ public sealed class Transform : Component
             unsafe
             {
                 CodeGen.Transform.set__Parent(
-                    (CodeGen.Transform*)Pointer, 
+                    (CodeGen.Transform*)Pointer,
                     value is null ? null : (CodeGen.Transform*)value.Pointer);
                 if (_parent is not null)
                     Children.RemoveUnsafe(this);
@@ -43,9 +49,16 @@ public sealed class Transform : Component
             }
         }
     }
-    
+
+    /// <summary>
+    /// Gets a collection of child <see cref="Transform"/>s.
+    /// </summary>
     public TransformCollection Children { get; }
 
+
+    /// <summary>
+    /// Gets or sets position with parent coordinate
+    /// </summary>
     public vec3 Position
     {
         get
@@ -64,6 +77,9 @@ public sealed class Transform : Component
         }
     }
 
+    /// <summary>
+    /// Sets position with local coordinate
+    /// </summary>
     public vec3 LocalPosition
     {
         set
@@ -75,6 +91,9 @@ public sealed class Transform : Component
         }
     }
 
+    /// <summary>
+    /// Gets or sets rotation with parent coordinate
+    /// </summary>
     public quat Rotation
     {
         get
@@ -93,6 +112,9 @@ public sealed class Transform : Component
         }
     }
 
+    /// <summary>
+    /// Gets or sets scale
+    /// </summary>
     public vec3 Scale
     {
         get
@@ -111,6 +133,9 @@ public sealed class Transform : Component
         }
     }
 
+    /// <summary>
+    /// A collection of <see cref="Transform"/> for specific <see cref="Transform"/>.
+    /// </summary>
     public class TransformCollection : IReadOnlyCollection<Transform>
     {
         private readonly Transform       _transform;
@@ -120,7 +145,10 @@ public sealed class Transform : Component
         {
             _transform = transform;
         }
-        
+
+        /// <summary>
+        /// Gets the count of child <see cref="Transform"/>s
+        /// </summary>
         public int Count
         {
             get
@@ -132,12 +160,16 @@ public sealed class Transform : Component
             }
         }
 
+        /// <summary>
+        /// Registers <see cref="Transform"/> as its child.
+        /// </summary>
+        /// <param name="transform">The <see cref="Transform"/> to set its parent to this</param>
         public void Add(Transform transform)
         {
             unsafe
             {
                 CodeGen.Transform.AddChild(
-                    (CodeGen.Transform*)_transform.Pointer, 
+                    (CodeGen.Transform*)_transform.Pointer,
                     (CodeGen.Transform*)transform.Pointer);
                 transform.Parent = _transform;
                 _children.Add(transform);
@@ -148,37 +180,50 @@ public sealed class Transform : Component
         {
             _children.Remove(transform);
         }
-        
+
+        /// <summary>
+        /// Gets child by index.
+        /// </summary>
+        /// <param name="i">The index of child</param>
         public Transform this[int i] => _children[i];
 
+        /// <summary>
+        /// Returns an enumerator that iterates through the <see cref="TransformCollection"/>.
+        /// </summary>
+        /// <returns></returns>
         public IEnumerator<Transform> GetEnumerator()
         {
             return _children.GetEnumerator();
         }
 
-        IEnumerator IEnumerable.      GetEnumerator()
+        IEnumerator IEnumerable.GetEnumerator()
         {
             return GetEnumerator();
         }
     }
-    
 
+
+    /// <inheritdoc />
     public override void OnCreated()
     {
     }
 
+    /// <inheritdoc />
     public override void OnEnabled()
     {
     }
 
+    /// <inheritdoc />
     public override void OnUpdated(float delta)
     {
     }
 
+    /// <inheritdoc />
     public override void OnDisabled()
     {
     }
 
+    /// <inheritdoc />
     public override void OnDestroyed()
     {
     }
