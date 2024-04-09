@@ -1,3 +1,4 @@
+using Tron.Runtime.Abstraction;
 using NativeMemory = Tron.Runtime.InteropServices.NativeMemory;
 
 namespace Tron.Runtime.System;
@@ -5,7 +6,7 @@ namespace Tron.Runtime.System;
 /// <summary>
 /// A system object to control <see cref="Window"/>.
 /// </summary>
-public sealed class Window
+public sealed class Window : IDrawable
 {
     private static          Window?         _current;
     private readonly unsafe CodeGen.Window* _pointer;
