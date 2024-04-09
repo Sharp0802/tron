@@ -12,7 +12,14 @@ public sealed class VertexBuffer : IContextObject, IDisposable
 {
     private                 int                   _disposed;
     private readonly unsafe CodeGen.VertexBuffer* _pointer;
+    private readonly        bool                  _external;
 
+    internal unsafe VertexBuffer(CodeGen.VertexBuffer* ptr)
+    {
+        _pointer  = ptr;
+        _external = true;
+    }
+    
     /// <summary>
     /// Creates new vertex-buffer.
     /// </summary>
@@ -76,6 +83,8 @@ public sealed class VertexBuffer : IContextObject, IDisposable
     public void Dispose()
     {
         if (Interlocked.CompareExchange(ref _disposed, 1, 0) != 0)
+            return;
+        if (_external)
             return;
         
         unsafe
